@@ -18,6 +18,16 @@ except Exception as err:
     print("Error connecting to DB", err)
 else:
     print(connection.version)
+    curr = connection.cursor()
+    sql_create = """ 
+CREATE TABLE EMPLOYEE(
+    FIRST_NAME VARCHAR(10),
+    LAST_NAME VARCHAR(10),
+    AGE NUMBER
+)
+"""
+    curr.execute(sql_create)
+    print("Table Created")
 
 
 
