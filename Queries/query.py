@@ -10,4 +10,27 @@ from Connection.connection import getConnection
 
 # Now you can use the Connection class
 connection = getConnection()
-print(connection.version)
+
+cursor = connection.cursor()
+
+try:
+    # Execute the insert statement
+
+    # Fetch all rows from the Houses table
+    cursor.execute('SELECT * FROM Houses')
+    results = cursor.fetchall()
+
+    # Print the number of rows fetched
+    print("Number of rows fetched:", len(results))
+
+    # Print the fetched rows
+    for row in results:
+        print(row)
+
+except Exception as e:
+    print("Error:", e)
+
+finally:
+    # Close the cursor and connection
+    cursor.close()
+    connection.close()
