@@ -1,39 +1,33 @@
 import getpass
 import oracledb
+import os
+
 
 
 pw = getpass.getpass(prompt = 'Input the Password:')  
 
+connection_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+print(connection_dir)
 
 try:
     connection=oracledb.connect(
-     config_dir=r"/opt/oracle/ACWDB",
+     config_dir=connection_dir + r"/conn",
      user="admin",
      password= pw,
-     dsn="lzad5447gxxjj799_tpurgent",
-     wallet_location=r"/opt/oracle/ACWDB",
+     dsn="wizarddb_tpurgent",
+     wallet_location=connection_dir + r"/conn",
      wallet_password=pw)
 
 except Exception as err:
     print("Error connecting to DB", err)
 else:
     print(connection.version)
-    curr = connection.cursor()
-    sql_create = """ 
-CREATE TABLE EMPLOYEE(
-    FIRST_NAME VARCHAR(10),
-    LAST_NAME VARCHAR(10),
-    AGE NUMBER
-)
-"""
-    curr.execute(sql_create)
-    print("Table Created")
 
 
 
 
 
-# Establish the connection
 
-print("here")
+
+
 
