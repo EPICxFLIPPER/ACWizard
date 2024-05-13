@@ -65,4 +65,4 @@ def selectBlock(block):
         cursor.close()
         connection.close()
 
-selectBlock(49)
+selectAll()

@@ -1,14 +1,14 @@
 class House:
 
     ##Consturctor, initilizes across, left, right, corner to be empty
-    def __init__(self,neighborhood,block,lot):
+    def __init__(self,neighborhood,block,lot,across,left,right,corner):
         self.neighborhood = neighborhood
         self.block = block
         self.lot = lot
-        self.across = []
-        self.left = [None,None,None]
-        self.right = [None,None,None]
-        self.corner = []
+        self.across = across
+        self.left = left
+        self.right = right
+        self.corner = corner
 
     ##Effects: Returns an array of neighborhood, block, lot for this house
     def getID(self):
@@ -38,10 +38,7 @@ class House:
     def insertCorner(self,house):
         self.corner.append(house)
 
-    
-objA = House("A",1,2)
-objB = House("B",3,4)
-objC = House("C",5,6)
+
 
 
 
