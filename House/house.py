@@ -1,7 +1,7 @@
 class House:
 
     ##Consturctor, initilizes across, left, right, corner to be empty
-    def __init__(self,neighborhood,block,lot,across,left,right,corner):
+    def __init__(self,neighborhood,block,lot,across,left,right,corner,pair):
         self.neighborhood = neighborhood
         self.block = block
         self.lot = lot
@@ -9,6 +9,7 @@ class House:
         self.left = left
         self.right = right
         self.corner = corner
+        self.pair = pair
 
     ##Effects: Returns an array of neighborhood, block, lot for this house
     def getID(self):
