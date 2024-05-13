@@ -14,8 +14,6 @@ connection = getConnection()
 cursor = connection.cursor()
 
 try:
-    # Execute the insert statement
-
     # Fetch all rows from the Houses table
     cursor.execute('SELECT * FROM Houses')
     results = cursor.fetchall()
