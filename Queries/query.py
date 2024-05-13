@@ -48,3 +48,21 @@ def selectSingle(block, lot):
     finally:
         cursor.close()
         connection.close()
+
+def selectBlock(block):
+    try:
+        connection = getConnection()
+        cursor = connection.cursor()
+        query = 'SELECT * FROM Houses WHERE Block = :block'
+        cursor.execute(query, {'block': block})
+        results = cursor.fetchall()
+        print(results)
+        print(len(results))
+        return results
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        cursor.close()
+        connection.close()
+
+selectBlock(49)
