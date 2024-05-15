@@ -14,31 +14,36 @@ connection = getConnection()
 
 cursor = connection.cursor()
 
-# open csv
-file = open('../data/housedata.csv')
+## UNCOMMENT THE FOLLOWING IF DATA NEEDS TO BE READ AGAIN
+# # open csv
+# file = open('../data/housedata.csv')
 
-# move to first line past header
-csvreader = csv.reader(file, delimiter=',')
-query_string = "INSERT INTO Houses (LotJob, TypeDescription, Phase, Block, Lot, Model, Elevation, ExtColour) VALUES (:1, :2, :3, :4, :5, :6, :7, :8)"
-next(csvreader)
+# # move to first line past header
+# csvreader = csv.reader(file, delimiter=',')
+# query_string = "INSERT INTO Houses (LotJob, TypeDescription, Phase, Block, Lot, Model, Elevation, ExtColour) VALUES (:1, :2, :3, :4, :5, :6, :7, :8)"
+# next(csvreader)
 
-try:
-    # Execute the insert statement
-    for row in csvreader:
-        if not row:
-            continue
-        data = []
-        data.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
-        #print(data)
+# try:
+#     # Execute the insert statement
+#     for row in csvreader:
+#         if not row:
+#             continue
+#         data = []
+#         data.append((row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7]))
+#         #print(data)
 
-        cursor.executemany(query_string, data)
+#         cursor.executemany(query_string, data)
 
     
-    connection.commit()
-except Exception as e:
-    print("Error:", e)
+#     connection.commit()
+# except Exception as e:
+#     print("Error:", e)
 
-finally:
-    # Close the cursor and connection
-    cursor.close()
-    connection.close()
+# finally:
+#     # Close the cursor and connection
+#     cursor.close()
+#     connection.close()
+##UNCOMMENT ABOVE IF DATA NEEDS TO BE ADDED AGAIN
+
+# cursor.execute("UPDATE Houses SET Neighborhood = 'Cityscape'")
+# connection.commit()

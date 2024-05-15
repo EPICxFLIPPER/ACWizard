@@ -41,7 +41,8 @@ class House:
 
     ##Effects: Returns a list of all colours this house can be
     def colours(self):
-        print("Stub")
+        print("stub")
+        
 
     ##Effects: Returns a list of all medels this house can be
     def models(self):
@@ -55,6 +56,7 @@ class House:
             ##Provided neighborhood, block, lot numbers
     def getColor(self,nieghborhood,block,lot):
         print("stub")
+        
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
     def getModel(self,neighborhood,block,lot):

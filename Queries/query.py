@@ -33,12 +33,12 @@ def selectAll():
         connection.close()
 
 ##Effects, prints the house at specified block and lot number
-def selectSingle(block, lot):
+def selectSingle(neighborhood, block, lot):
     try:
         connection = getConnection()
         cursor = connection.cursor()
-        query = 'SELECT * FROM Houses WHERE Lot = :lot AND Block = :block'
-        cursor.execute(query, {'lot': lot, 'block': block})
+        query = 'SELECT * FROM Houses WHERE Neighborhood = :neighborhood AND Lot = :lot AND Block = :block'
+        cursor.execute(query, {'neighborhood':neighborhood,'lot': lot, 'block': block})
         results = cursor.fetchall()
         print(results)
         print(len(results))
@@ -65,4 +65,4 @@ def selectBlock(block):
         cursor.close()
         connection.close()
 
-selectAll()
+
