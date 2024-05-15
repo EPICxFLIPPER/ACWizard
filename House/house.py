@@ -39,6 +39,21 @@ class House:
     def insertCorner(self,house):
         self.corner.append(house)
 
+    ##Effects: Returns a list of all colours this house can be
+    def colours(self):
+        print("Stub")
+
+    ##Effects: Returns a list of all medels this house can be
+    def models(self):
+        print("Stub")
+
+    ##Effects: Returns a list of all elevations this house can be
+    def elevations(self):
+        print("Stub")
+
+
+
+
 
 
 
