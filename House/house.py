@@ -55,11 +55,33 @@ class House:
     ##         If this house does not yet have a model, returns []
     def colours(self):
         id = self.getID()
-        raise InvalidModelException("bruh")
-        # if (self.getModel(id[0],id[1],id[2]) == " "):
-        #     return []
         
+        model = self.getModel(id[0],id[1],id[2])
+        if (model == "PR"):
+            return self.getPrarieColors(id)
+        elif (model == "CR"):
+            return self.getCraftsmanColors(id)
+        elif (model == "CL"):
+            return self.getColonialColors(id)
+        else:
+            raise InvalidModelException(model)
         
+
+    ##Effects: returns all the colors that a home with model PR can be, it is gaurnteeded
+    ##         that the model is PR when this fucntion is called        
+    def getPrarieColors(self,id):
+        return []
+    
+    ##Effects: returns all the colors that a home with model CR can be, it is gaurnteeded
+    ##         that the model is CR when this fucntion is called
+    def getCraftsmanColors(self,id):
+        return []
+    
+    ##Effects: returns all the colors that a home with model CL can be, it is gaurnteeded
+    ##         that the model is CL when this fucntion is called
+    def getColonialColors(self,id):
+        return []
+    
 
 
         
