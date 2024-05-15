@@ -5,6 +5,7 @@ parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
 
 from House.exceptions import *
+from Queries.query import *
 
 class House:
 
@@ -71,18 +72,43 @@ class House:
     ##         that the model is PR when this fucntion is called        
     def getPrarieColors(self,id):
         possibleColors = self.modelToColorDict['PR']
-        oneleftColor = self.getColor(self.left[0])
-        return []
+        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
+        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
+        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
+        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
+        possibleColors.remove(oneLeftColor)
+        possibleColors.remove(twoLeftColor)
+        possibleColors.remove(oneRightColor)
+        possibleColors.remove(twoRightColor)
+        return possibleColors
     
     ##Effects: returns all the colors that a home with model CR can be, it is gaurnteeded
     ##         that the model is CR when this fucntion is called
     def getCraftsmanColors(self,id):
-        return []
+        possibleColors = self.modelToColorDict['CR']
+        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
+        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
+        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
+        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
+        possibleColors.remove(oneLeftColor)
+        possibleColors.remove(twoLeftColor)
+        possibleColors.remove(oneRightColor)
+        possibleColors.remove(twoRightColor)
+        return possibleColors
     
     ##Effects: returns all the colors that a home with model CL can be, it is gaurnteeded
     ##         that the model is CL when this fucntion is called
     def getColonialColors(self,id):
-        return []
+        possibleColors = self.modelToColorDict['CL']
+        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
+        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
+        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
+        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
+        possibleColors.remove(oneLeftColor)
+        possibleColors.remove(twoLeftColor)
+        possibleColors.remove(oneRightColor)
+        possibleColors.remove(twoRightColor)
+        return possibleColors
     
     ##Effects: Returns a list of all medels this house can be
     def models(self):
@@ -94,19 +120,24 @@ class House:
 
     ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
-            ##If the house does not exist, returns []
-    def getColor(self,nieghborhood,block,lot):
-        print("stub")
+            ##If the house does not exist, returns ""
+    def getColor(self,neighborhood,block,lot):
+        result = selectSingle(neighborhood,block,lot)
+        if (len(result) == 0):
+            return ""
+        else:
+            return result[0][7]
+        
         
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
-            ##If the house does not exist, returns []
+            ##If the house does not exist, returns ""
     def getModel(self,neighborhood,block,lot):
         print("stub")
 
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
-            ##If the house does not exist, returns []
+            ##If the house does not exist, returns ""
     def getElevation(self,neighborhood,block,lot):
         print("stub")
 
