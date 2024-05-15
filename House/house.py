@@ -118,7 +118,7 @@ class House:
 obj = House("A",1,1,[],[],[],[],[])
 try:
     obj.colours()
-except InvalidModelException as e:
+except InvalidElevationException as e:
     print("Error", e)
 
 
