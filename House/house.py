@@ -70,6 +70,8 @@ class House:
     ##Effects: returns all the colors that a home with model PR can be, it is gaurnteeded
     ##         that the model is PR when this fucntion is called        
     def getPrarieColors(self,id):
+        possibleColors = self.modelToColorDict['PR']
+        oneleftColor = self.getColor(self.left[0])
         return []
     
     ##Effects: returns all the colors that a home with model CR can be, it is gaurnteeded
@@ -82,10 +84,6 @@ class House:
     def getColonialColors(self,id):
         return []
     
-
-
-        
-
     ##Effects: Returns a list of all medels this house can be
     def models(self):
         print("Stub")
@@ -96,16 +94,19 @@ class House:
 
     ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
+            ##If the house does not exist, returns []
     def getColor(self,nieghborhood,block,lot):
         print("stub")
         
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
+            ##If the house does not exist, returns []
     def getModel(self,neighborhood,block,lot):
         print("stub")
 
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
+            ##If the house does not exist, returns []
     def getElevation(self,neighborhood,block,lot):
         print("stub")
 
