@@ -55,7 +55,7 @@ class House:
     ##         If this house does not yet have a model, returns []
     def colours(self):
         id = self.getID()
-        raise InvalidModelException()
+        raise InvalidModelException("bruh")
         # if (self.getModel(id[0],id[1],id[2]) == " "):
         #     return []
         
