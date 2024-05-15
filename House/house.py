@@ -59,62 +59,30 @@ class House:
         
         model = self.getModel(id[0],id[1],id[2])
         if (model == "PR"):
-            return self.getPrarieColors(id)
+            return self.getPrarieColors(self.modelToColorDict['PR'])
         elif (model == "CR"):
-            return self.getCraftsmanColors(id)
+            return self.getCraftsmanColors(self.modelToColorDict['CR'])
         elif (model == "CL"):
-            return self.getColonialColors(id)
+            return self.getColonialColors(self.modelToColorDict['CL'])
         else:
             raise InvalidModelException(model)
         
+    ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
+    def getColorsForModel(self,possibleColors):
+        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
+        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
+        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
+        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
+        possibleColors.remove(oneLeftColor)
+        possibleColors.remove(twoLeftColor)
+        possibleColors.remove(oneRightColor)
+        possibleColors.remove(twoRightColor)
+        for cross in self.across:
+            possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
+        return possibleColors
+        
 
-    ##Effects: returns all the colors that a home with model PR can be, it is gaurnteeded
-    ##         that the model is PR when this fucntion is called        
-    def getPrarieColors(self,id):
-        possibleColors = self.modelToColorDict['PR']
-        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
-        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
-        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
-        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
-        possibleColors.remove(oneLeftColor)
-        possibleColors.remove(twoLeftColor)
-        possibleColors.remove(oneRightColor)
-        possibleColors.remove(twoRightColor)
-        for cross in self.across:
-            possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
-        return possibleColors
     
-    ##Effects: returns all the colors that a home with model CR can be, it is gaurnteeded
-    ##         that the model is CR when this fucntion is called
-    def getCraftsmanColors(self,id):
-        possibleColors = self.modelToColorDict['CR']
-        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
-        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
-        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
-        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
-        possibleColors.remove(oneLeftColor)
-        possibleColors.remove(twoLeftColor)
-        possibleColors.remove(oneRightColor)
-        possibleColors.remove(twoRightColor)
-        for cross in self.across:
-            possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
-        return possibleColors
-    
-    ##Effects: returns all the colors that a home with model CL can be, it is gaurnteeded
-    ##         that the model is CL when this fucntion is called
-    def getColonialColors(self,id):
-        possibleColors = self.modelToColorDict['CL']
-        oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
-        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
-        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
-        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
-        possibleColors.remove(oneLeftColor)
-        possibleColors.remove(twoLeftColor)
-        possibleColors.remove(oneRightColor)
-        possibleColors.remove(twoRightColor)
-        for cross in self.across:
-            possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
-        return possibleColors
     
     ##Effects: Returns a list of all medels this house can be
     def models(self):
