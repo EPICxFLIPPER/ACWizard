@@ -51,6 +51,20 @@ class House:
     def elevations(self):
         print("Stub")
 
+    ##Effects: Queries the database and retruns the color of the house with 
+            ##Provided neighborhood, block, lot numbers
+    def getColor(self,nieghborhood,block,lot):
+        print("stub")
+     ##Effects: Queries the database and retruns the color of the house with 
+            ##Provided neighborhood, block, lot numbers
+    def getModel(self,neighborhood,block,lot):
+        print("stub")
+
+     ##Effects: Queries the database and retruns the color of the house with 
+            ##Provided neighborhood, block, lot numbers
+    def getElevation(self,neighborhood,block,lot):
+        print("stub")
+
 
 
 
