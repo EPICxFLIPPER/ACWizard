@@ -1,3 +1,11 @@
+import sys
+import os
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(parent_dir)
+
+from House.exceptions import *
+
 class House:
 
     modelToColorDict = {'CL' : ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1'],
@@ -47,8 +55,10 @@ class House:
     ##         If this house does not yet have a model, returns []
     def colours(self):
         id = self.getID()
-        if (self.getModel(id[0],id[1],id[2]) == " "):
-            return []
+        raise InvalidModelException()
+        # if (self.getModel(id[0],id[1],id[2]) == " "):
+        #     return []
+        
         
 
 
@@ -77,7 +87,11 @@ class House:
     def getElevation(self,neighborhood,block,lot):
         print("stub")
 
-
+obj = House("A",1,1,[],[],[],[],[])
+try:
+    obj.colours()
+except InvalidModelException as e:
+    print("Error", e)
 
 
 
