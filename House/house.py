@@ -9,7 +9,7 @@ from Queries.query import *
 
 class House:
 
-    modelToColorDict = {'CL' : ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1'],
+    elevationToColorDict = {'CL' : ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1'],
                         'CR' : ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1'],
                         'PR' : ['PR - 1.1', 'PR - 2.1', 'PR - 3.1', 'PR - 4.1','PR - 5.1','PR - 6.1','PR - 7.1','PR - 8.1','PR - 9.1','PR - 10.1']}
 
@@ -57,18 +57,18 @@ class House:
     def colours(self):
         id = self.getID()
         
-        model = self.getModel(id[0],id[1],id[2])
-        if (model == "PR"):
-            return self.getPrarieColors(self.modelToColorDict['PR'])
-        elif (model == "CR"):
-            return self.getCraftsmanColors(self.modelToColorDict['CR'])
-        elif (model == "CL"):
-            return self.getColonialColors(self.modelToColorDict['CL'])
+        elevation = self.getElevation(id[0],id[1],id[2])
+        if (elevation == "PR"):
+            return self.getColorsForElevation(self.elevationToColorDict['PR'])
+        elif (elevation == "CR"):
+            return self.getColorsForElevation(self.elevationToColorDict['CR'])
+        elif (elevation == "CL"):
+            return self.getColorsForElevation(self.elevationToColorDict['CL'])
         else:
-            raise InvalidModelException(model)
+            raise InvalidElevationException(elevation)
         
     ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
-    def getColorsForModel(self,possibleColors):
+    def getColorsForElevation(self,possibleColors):
         oneLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
         twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
         oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
