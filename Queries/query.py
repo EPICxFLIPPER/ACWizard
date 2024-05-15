@@ -65,4 +65,6 @@ def selectBlock(block):
         cursor.close()
         connection.close()
 
+result = selectSingle('Cityscape',51,7)
+print((result[0][7]) == " ")
 
