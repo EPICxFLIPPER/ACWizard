@@ -107,13 +107,21 @@ class House:
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
     def getModel(self,neighborhood,block,lot):
-        print("stub")
+        result = selectSingle(neighborhood,block,lot)
+        if (len(result) == 0):
+            return ""
+        else:
+            return result[0][5]
 
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
     def getElevation(self,neighborhood,block,lot):
-        print("stub")
+        result = selectSingle(neighborhood,block,lot)
+        if (len(result) == 0):
+            return ""
+        else:
+            return result[0][6]
 
 obj = House("A",1,1,[],[],[],[],[])
 try:
