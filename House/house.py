@@ -94,6 +94,8 @@ class House:
         possibleColors.remove(twoLeftColor)
         possibleColors.remove(oneRightColor)
         possibleColors.remove(twoRightColor)
+        for cross in self.across:
+            possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
         return possibleColors
     
     ##Effects: returns all the colors that a home with model CL can be, it is gaurnteeded
