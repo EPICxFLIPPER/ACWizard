@@ -117,7 +117,7 @@ class House:
             effectsMod = [self.left[0],self.left[1],self.right[0],self.right[1]]
 
        
-            for h in self.across:
+            for h in self.corner:
                 effectsMod.append(h)
 
             for h in effectsMod:
