@@ -2,7 +2,7 @@ class InvalidElevationException(Exception):
     
 
     def __init__(self, elevation):
-        if (elevation == " "):
+        if (elevation == " " or elevation ==  None):
             self.message = "Invalid Elevation: " + " empty"
         else:
             self.message = "Invalid Elevation: " + elevation 
@@ -12,7 +12,7 @@ class InvalidElevationException(Exception):
     
 class InvalidFootageException(Exception):
     def __init__(self, footage):
-        if (footage == " "):
+        if (footage == " " or footage == None):
             self.message = "Invalid Footage: " + " empty"
         else:
             self.message = "Invalid Footage: " + footage 

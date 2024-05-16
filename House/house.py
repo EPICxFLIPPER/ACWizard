@@ -58,16 +58,12 @@ class House:
 
     ##Effects: Returns a list of all colours this house can be,
     ##         If this house does not yet have a model, returns []
+    ##         If this house does not have a vailid elevation, throws invalid elevation exception
     def colours(self):
         id = self.getID()
-        
         elevation = self.getElevation(id[0],id[1],id[2])
-        if (elevation == "PR"):
-            return self.getColorsForElevation(self.elevationToColorDict['PR'])
-        elif (elevation == "CR"):
-            return self.getColorsForElevation(self.elevationToColorDict['CR'])
-        elif (elevation == "CL"):
-            return self.getColorsForElevation(self.elevationToColorDict['CL'])
+        if (elevation == "PR" or elevation == "CR" or elevation == "CL"):
+            return self.getColorsForElevation(self.elevationToColorDict[elevation])
         else:
             raise InvalidElevationException(elevation)
         
@@ -88,7 +84,7 @@ class House:
 
     
     
-    ##Effects: Returns a list of all models this house can be
+    ##Effects: Returns a list of all models this house can be, Throws InvalidFootageException if this house does not have valid Footage
     def models(self):
         id = self.getID()
         footage = self.getFootage(id[0],id[1],id[2])
@@ -99,7 +95,50 @@ class House:
         
 
     def modelsForSize(self,possibleModels):
-        print("stub")
+        id = self.getId()
+        elevation = self.getElevation(id[0],id[1],id[2])
+
+        if (elevation != None and elevation != " "):
+            ##This house does have en elevation
+
+            ##3 in row rule
+            oneLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2])
+            twoLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2])
+            oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2])
+            twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2])
+            if (oneLeftModel == twoLeftModel):
+                possibleModels.remove(oneLeftModel)
+            if (oneLeftModel == oneRightModel):
+                possibleModels.remove(oneLeftModel)
+            if (oneRightModel == twoRightModel):
+                possibleModels.remove(twoRightModel)
+
+            ##Two away / corner Rule
+            effectsMod = [self.left[0],self.left[1],self.right[0],self.right[1]]
+
+       
+            for h in self.across:
+                effectsMod.append(h)
+
+            for h in effectsMod:
+                if (self.getElevation(h[0],h[1],h[2]) == elevation):
+                    possibleModels.remove(self.getModel(h[0],h[1],h[2]))
+
+            ## 30% Rule
+            modelCounts = self.modelCountsBlockElevation(id[0],id[1],elevation)
+            blocksize = self.getBlockSize(id[0],id[1])
+            cutoff = blocksize/3
+
+            ##Possible need for delta when dividing
+            for p in modelCounts:
+                if (p[1] + 1 > cutoff):
+                    possibleModels.remove(p[0])
+
+            return possibleModels
+            
+
+
+
 
 
     ##Effects: Returns a list of all elevations this house can be
@@ -136,19 +175,27 @@ class House:
             return ""
         else:
             return result[0][6]
-        
+    
+    ##Effects: Returns the footage value fo the given house
     def getFootage(self,neighborhood,block,lot):
         result = selectSingle(neighborhood,block,lot)
         if (len(result) == 0):
             return ""
         else:
             return result[0][9]
+        
+    ##Effects: Returns an array of all the models and elevation pairs for houses on
+    ##         the given neighborhood and block
+    def getBlockModelsForElevations(self,neighborhood,block,elevation):
+        return modelCountsBlockElevation(neighborhood,block,elevation)
+    
+    ##Effects: Returns the nubmer of houses on the block
+    def getBlockSize(self,neighborhood,block):
+        return blockSize(neighborhood,block)[0][0]
 
 
 obj = House("A",1,1,[],[],[],[],[])
-result = obj.getFootage('Cityscape',51,7)
-print('44 ft\'s' == result)
-print(result)
+
 
 
 

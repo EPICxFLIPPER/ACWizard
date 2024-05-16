@@ -65,5 +65,38 @@ def selectBlock(block):
         cursor.close()
         connection.close()
 
+def modelCountsBlockElevation(neighborhood, block,elevation):
+    try:
+        connection = getConnection()
+        cursor = connection.cursor()
+       # query = 'SELECT Model, Elevation FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood AND Elevation = :elevation GROUP BY Model'
 
+        query = 'SELECT Model, Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood AND Elevation = :elevation GROUP BY Model'
+        cursor.execute(query, {'block': block, 'neighborhood' : neighborhood, 'elevation' : elevation})
+        results = cursor.fetchall()
+        print(results)
+        print(len(results))
+        return results
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        cursor.close()
+        connection.close()
+
+def blockSize(neighborhood, block):
+    try:
+        connection = getConnection()
+        cursor = connection.cursor()
+       
+        query = 'SELECT Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
+        cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})
+        results = cursor.fetchall()
+        print(results)
+        print(len(results))
+        return results
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        cursor.close()
+        connection.close()
 
