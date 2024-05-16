@@ -45,5 +45,9 @@ cursor = connection.cursor()
 #     connection.close()
 ##UNCOMMENT ABOVE IF DATA NEEDS TO BE ADDED AGAIN
 
-# cursor.execute("UPDATE Houses SET Neighborhood = 'Cityscape'")
+
+
+##THE BELOW QEUERY SPLITS THE TYPEDESCRIPTION COLUMN AND PUTS IT IN FOOTAGE
+
+# cursor.execute("UPDATE Houses SET footage = SUBSTR(TypeDescription, INSTR(TypeDescription, ' - ') + 3)")
 # connection.commit()
