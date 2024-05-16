@@ -12,6 +12,10 @@ class House:
     elevationToColorDict = {'CL' : ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1'],
                         'CR' : ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1'],
                         'PR' : ['PR - 1.1', 'PR - 2.1', 'PR - 3.1', 'PR - 4.1','PR - 5.1','PR - 6.1','PR - 7.1','PR - 8.1','PR - 9.1','PR - 10.1']}
+    
+    sizeToModels = {'44' : ['Armstrong','Bishop','Borgeua','Cline','Maclaren','Ptarmigan','Rutherford','Smythe','Bishop 2.0','Aberdeen','Rundle','Bluebell'],
+                    '36' : ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay'],
+                    '24' : ['Waputik','Palliser','Sundance','Finch','Cardinal','Starling']}
 
     ##Consturctor, initilizes across, left, right, corner to be empty
     def __init__(self,neighborhood,block,lot,across,left,right,corner,pair):
