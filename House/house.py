@@ -13,9 +13,9 @@ class House:
                         'CR' : ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1'],
                         'PR' : ['PR - 1.1', 'PR - 2.1', 'PR - 3.1', 'PR - 4.1','PR - 5.1','PR - 6.1','PR - 7.1','PR - 8.1','PR - 9.1','PR - 10.1']}
     
-    sizeToModels = {'44' : ['Armstrong','Bishop','Borgeua','Cline','Maclaren','Ptarmigan','Rutherford','Smythe','Bishop 2.0','Aberdeen','Rundle','Bluebell'],
-                    '36' : ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay'],
-                    '24' : ['Waputik','Palliser','Sundance','Finch','Cardinal','Starling']}
+    footageToModels = {'44 ft\'s' : ['Armstrong','Bishop','Borgeua','Cline','Maclaren','Ptarmigan','Rutherford','Smythe','Bishop 2.0','Aberdeen','Rundle','Bluebell'],
+                    '36 ft\'s' : ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay'],
+                    '24 ft\'s' : ['Waputik','Palliser','Sundance','Finch','Cardinal','Starling']}
 
     ##Consturctor, initilizes across, left, right, corner to be empty
     def __init__(self,neighborhood,block,lot,across,left,right,corner,pair):
@@ -88,9 +88,19 @@ class House:
 
     
     
-    ##Effects: Returns a list of all medels this house can be
+    ##Effects: Returns a list of all models this house can be
     def models(self):
-        print("Stub")
+        id = self.getID()
+        footage = self.getFootage(id[0],id[1],id[2])
+        if (footage == '44 ft\'s' or footage ==  '36 ft\'s' or footage ==  '24 ft\'s'):
+            return self.modelsForSize(self.footageToModels(footage))
+        else:
+            raise InvalidFootageException(footage)
+        
+
+    def modelsForSize(self,possibleModels):
+        print("stub")
+
 
     ##Effects: Returns a list of all elevations this house can be
     def elevations(self):
@@ -126,12 +136,19 @@ class House:
             return ""
         else:
             return result[0][6]
+        
+    def getFootage(self,neighborhood,block,lot):
+        result = selectSingle(neighborhood,block,lot)
+        if (len(result) == 0):
+            return ""
+        else:
+            return result[0][9]
+
 
 obj = House("A",1,1,[],[],[],[],[])
-try:
-    obj.colours()
-except InvalidElevationException as e:
-    print("Error", e)
+result = obj.getFootage('Cityscape',51,7)
+print('44 ft\'s' == result)
+print(result)
 
 
 
