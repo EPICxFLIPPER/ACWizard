@@ -100,3 +100,4 @@ def blockSize(neighborhood, block):
         cursor.close()
         connection.close()
 
+selectAll()
