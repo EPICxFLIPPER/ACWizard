@@ -55,10 +55,20 @@ def test_Elevation4Across():
     opp = House(n,1,31,cross,[],[],[],[])
     assert opp.elevations() == []
 
+##Tests the case where a model elevation is under 30% of the block, importatnt that CL is in the list for this test
+def test_Elevation30PercentRuleUnder():
+    opp = House(n,20,1,[],[],[],[],[])
+    assert sorted(opp.elevations()) == sorted(["CR","PR","CL"])
 
-@pytest.mark.skip(reason="This test is not done")
-def test_Elevation30PercentRule():
-    print("stub")
+##Tests the case where a model elevation is equal to 30% of the block, important that PR is in the list for this test.
+def test_Elevation30PercentRuleEqual():
+    opp = House(n,30,1,[],[],[],[],[])
+    assert sorted(opp.elevations()) == sorted(["CR","PR","CL"])
+
+##Tests teh case where a model elevation is over 30% of the block.
+def test_Elevation30PercentRuleOver():
+    opp = House(n,40,1,[],[],[],[],[])
+    assert sorted(opp.elevations()) == sorted(["CR","CL"])
 
 @pytest.mark.skip(reason="This test is not done")
 def test_Elevation3InRow():
