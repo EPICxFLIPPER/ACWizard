@@ -70,9 +70,23 @@ def test_Elevation30PercentRuleOver():
     opp = House(n,40,1,[],[],[],[],[])
     assert sorted(opp.elevations()) == sorted(["CR","CL"])
 
-@pytest.mark.skip(reason="This test is not done")
-def test_Elevation3InRow():
-    print("stub")
+##Tests the case for 3 in row, with this house being the middle one
+def test_Elevation3InRow1EachSize():
+    left = [None,None,(n,100,2)]
+    right = [(n,100,4),None,None]
+    opp = House(n,100,1,[],left,right,[],[])
+    assert opp.elevations() == ["CR"]
+##Tests the case for 3 in row, with this house being the leftmost one
+def test_Elevation3InRow2Right():
+    right = [(n,100,2),(n,100,3),None]
+    opp = House(n,100,1,[],[],right,[],[])
+    assert opp.elevations() == ["PR"]
+
+##Tests the case for 3 in row, with this house being the rightmost one
+def test_Elevation3InRow2Left():
+    left = [None,(n,100,2),(n,100,3)]
+    opp = House(n,100,1,[],left,[],[],[])
+    assert opp.elevations() == ["PR"]
 
 @pytest.mark.skip(reason="This test is not done")
 def test_Elevation2Appart():

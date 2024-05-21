@@ -16,7 +16,7 @@ cursor = connection.cursor()
 
 ## UNCOMMENT THE FOLLOWING IF DATA NEEDS TO BE READ AGAIN
 # open csv
-file = open('../Data/ElevationTest30.csv')
+file = open('../Data/ElevationTestCornerBeside.csv')
 
 # move to first line past header
 csvreader = csv.reader(file, delimiter=',')
