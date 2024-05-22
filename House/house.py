@@ -24,7 +24,7 @@ class House:
             "PR": 0
         }
 
-    ##Consturctor, initilizes across, left, right, corner to be empty
+    ##Constructor, initilizes across, left, right, corner to be empty
     def __init__(self,neighborhood,block,lot,across,left,right,corner,pair):
         self.neighborhood = neighborhood
         self.block = block
@@ -102,7 +102,7 @@ class House:
         
 
     def modelsForSize(self,possibleModels):
-        id = self.getId()
+        id = self.getID()
         elevation = self.getElevation(id[0],id[1],id[2])
 
         if (elevation != None and elevation != " "):
@@ -151,21 +151,21 @@ class House:
     ##Effects: Returns a list of all elevations this house can be
     def elevations(self):
         elevationList = []
-        elevationList = self.twoApart(self, elevationList)
-        elevationList = self.maxThree(self, elevationList)
-        elevationList = self.acrossElevation(self, elevationList)
-        elevationList = self.alternatingElevation(self, elevationList)
-        elevationList = self.checkCorner(self, elevationList)
+        elevationList = self.twoApart(elevationList)
+        elevationList = self.maxThree(elevationList)
+        elevationList = self.acrossElevation(elevationList)
+        elevationList = self.alternatingElevation(elevationList)
+        elevationList = self.checkCorner(elevationList)
         return elevationList
 
     def checkCorner(house, elevationList):
-        curHouse = house.getID(house)
+        curHouse = house.getID()
         houseModel = house.getModel(house, curHouse[0], curHouse[1], curHouse[2])
 
         for cornerHouse in house.corner:
-            cornerArray = house.getID(cornerHouse)
-            cornerHouseModel = house.getModel(cornerHouse, cornerArray[0], cornerArray[1], cornerArray[2])
-            cornerHouseElevation = house.getElevation(cornerHouse, cornerArray[0], cornerArray[1], cornerArray[2])
+            cornerArray = cornerHouse.getID()
+            cornerHouseModel = cornerHouse.getModel(cornerArray[0], cornerArray[1], cornerArray[2])
+            cornerHouseElevation = cornerHouse.getElevation(cornerArray[0], cornerArray[1], cornerArray[2])
             if (cornerHouseModel == houseModel & cornerHouseElevation in elevationList):
                 elevationList.remove(cornerHouseElevation)
 
@@ -173,19 +173,19 @@ class House:
 
     def alternatingElevation(house, elevationList):
         # get characteristics of left house
-        leftHouse = house.getID(house.left[1])
-        leftHouseModel = house.getModel(house.left[1], leftHouse[0], leftHouse[1], leftHouse[2])
-        leftHouseElevation = house.getElevation(house.left[1], leftHouse[0], leftHouse[1], leftHouse[2])
+        leftHouse = house.left[1].getID()
+        leftHouseModel = house.left[1].getModel(leftHouse[0], leftHouse[1], leftHouse[2])
+        leftHouseElevation = house.left[1].getElevation(leftHouse[0], leftHouse[1], leftHouse[2])
 
         # get characteristics of right house
-        rightHouse = house.getID(house.right[0])
-        rightHouseModel = house.getModel(house.right[0], rightHouse[0], rightHouse[1], rightHouse[2])
-        rightHouseElevation = house.getElevation(house.right[0], rightHouse[0], rightHouse[1], rightHouse[2])
+        rightHouse = house.right[0].getID()
+        rightHouseModel = house.right[0].getModel(rightHouse[0], rightHouse[1], rightHouse[2])
+        rightHouseElevation = house.right[0].getElevation(rightHouse[0], rightHouse[1], rightHouse[2])
 
         # get characteristics of current house
-        curHouse = house.getID(house)
-        houseModel = house.getModel(house, curHouse[0], curHouse[1], curHouse[2])
-        houseElevation = house.getElevation(house, curHouse[0], curHouse[1], curHouse[2])
+        curHouse = house.getID()
+        houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
+        houseElevation = house.getElevation(curHouse[0], curHouse[1], curHouse[2])
 
         # if the model is the same, elevation must be alternating
         if leftHouseModel == rightHouseModel & houseModel == leftHouseModel:
@@ -198,8 +198,8 @@ class House:
 
     # TODo: clarify ruling on this one
     def acrossElevation(house, elevationList):
-        houseArray = house.getID(house)
-        model = house.getModel(house, houseArray[0], houseArray[1], houseArray[2])
+        houseArray = house.getID()
+        model = house.getModel(houseArray[0], houseArray[1], houseArray[2])
         index = 0
         houseIndex = 0
         # find index of current house
@@ -210,9 +210,9 @@ class House:
 
         # check across houses: directly across, left one of direct, right one of direct
         for x in range(houseIndex-1, houseIndex+2):
-            neighbourArray = house.getID(house.block[x])
-            neighbourModel = house.getModel(house.block[x], neighbourArray[0], neighbourArray[1], neighbourArray[2])
-            neighbourElevation = house.getElevation(house.block[x], neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            neighbourArray = house.block[x].getID()
+            neighbourModel = house.block[x].getModel(neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            neighbourElevation = house.block[x].getElevation(neighbourArray[0], neighbourArray[1], neighbourArray[2])
             # if has the same model, cannot have same elevation
             if neighbourModel == model & neighbourElevation in elevationList:
                 elevationList.remove(neighbourElevation)
@@ -222,13 +222,13 @@ class House:
 
     def maxThree(house, elevationList):
         possibleElevations = house.elevationDict
-        houseArray = house.getID(house)
-        houseModel = house.getModel(house, houseArray[0], houseArray[1], houseArray[2])
+        houseArray = house.getID()
+        houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
         # loops through houses on the block
         for neighbour in house.block:
-            neighbourArray = neighbour.getID(neighbour)
-            elevation = neighbour.getElevation(neighbour, neighbourArray[0], neighbourArray[1], neighbourArray[2])
-            model = neighbour.getModel(neighbour, neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            neighbourArray = neighbour.getID()
+            elevation = neighbour.getElevation(neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            model = neighbour.getModel(neighbourArray[0], neighbourArray[1], neighbourArray[2])
             # increment elevation count of block
             if model == houseModel:
                 possibleElevations[elevation] += 1
@@ -241,31 +241,32 @@ class House:
 
     def twoApart(house, elevationList):
         possibleElevations = house.elevationDict
-        houseArray = house.getID(house)
-        houseModel = house.getModel(house, houseArray[0], houseArray[1], houseArray[2])
-        houseElevation = house.getElevation(house, houseArray[0], houseArray[1], houseArray[2])
+        houseArray = house.getID()
+        houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
+        houseElevation = house.getElevation(houseArray[0], houseArray[1], houseArray[2])
 
         # loop through left Neighbours
         for leftNeighbour in house.left:
-            neighbourArray = leftNeighbour.getID(leftNeighbour)
-            elevation = leftNeighbour.getElevation(leftNeighbour, neighbourArray[0], neighbourArray[1], neighbourArray[2])
-            model = leftNeighbour.getModel(leftNeighbour, neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            neighbourArray = leftNeighbour.getID()
+            elevation = leftNeighbour.getElevation(neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            model = leftNeighbour.getModel(neighbourArray[0], neighbourArray[1], neighbourArray[2])
             if model == houseModel:
                 possibleElevations[elevation] += 1
 
         # loop through right Neighbours
         for rightNeighbour in house.right:
-            neighbourArray = rightNeighbour.getID(rightNeighbour)
-            elevation = rightNeighbour.getElevation(rightNeighbour, neighbourArray[0], neighbourArray[1], neighbourArray[2])
-            model = rightNeighbour.getModel(rightNeighbour, neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            neighbourArray = rightNeighbour.getID()
+            elevation = rightNeighbour.getElevation(neighbourArray[0], neighbourArray[1], neighbourArray[2])
+            model = rightNeighbour.getModel(neighbourArray[0], neighbourArray[1], neighbourArray[2])
             if model == houseModel:
                 possibleElevations[elevation] += 1
 
         # loop through elevation dictionary
         for elevation in possibleElevations:
             # if no neighbours within 2 houses have elevation, it is valid: add it to the list
-            if possibleElevations[elevation] == 0 & elevation != " ":
-                elevationList.append(elevation)
+            if possibleElevations[elevation] == 0:
+                if elevation != " ":
+                    elevationList.append(elevation)
             # reset elevation count
             possibleElevations[elevation] = 0
 
