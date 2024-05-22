@@ -40,8 +40,6 @@ def selectSingle(neighborhood, block, lot):
         query = 'SELECT * FROM Houses WHERE Neighborhood = :neighborhood AND Lot = :lot AND Block = :block'
         cursor.execute(query, {'neighborhood':neighborhood,'lot': lot, 'block': block})
         results = cursor.fetchall()
-        print(results)
-        print(len(results))
         return results
     except Exception as e:
         print("Error:", e)
@@ -56,8 +54,6 @@ def selectBlock(block):
         query = 'SELECT * FROM Houses WHERE Block = :block'
         cursor.execute(query, {'block': block})
         results = cursor.fetchall()
-        print(results)
-        print(len(results))
         return results
     except Exception as e:
         print("Error:", e)

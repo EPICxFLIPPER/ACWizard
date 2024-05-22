@@ -19,11 +19,13 @@ def test_Elevation3AcrossMix():
     opp = House(n,1,4,cross,[],[],[],[])
     assert opp.elevations() == ["CR"]
 
-##All 3 houses across have CL elevation
+
+#All 3 houses across have CL elevation
 def test_Elevation3AcrossSame():
     cross = [(n,1,5),(n,1,6),(n,1,7)]
     opp = House(n,1,8,cross,[],[],[],[])
     assert sorted(opp.elevations()) == sorted(["CR","PR"])
+
 
 ##All 3 houses across have different elevation, expect empty return
 def test_Elevation3AcrossAll():
