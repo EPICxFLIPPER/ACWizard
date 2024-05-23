@@ -237,7 +237,7 @@ class House:
                     if elevation is not None:
                         possibleElevations[elevation] += 1
         for elevation in possibleElevations:
-            if possibleElevations[elevation]/len(houseBlock) > 0.3:
+            if possibleElevations[elevation]/len(houseBlock) >= 0.3:
                 if elevation in elevationList:
                     elevationList.remove(elevation)
             # reset counts
