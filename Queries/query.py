@@ -33,9 +33,8 @@ def selectAll():
         connection.close()
 
 ##Effects, prints the house at specified block and lot number
-def selectSingle(neighborhood, block, lot):
+def selectSingle(neighborhood, block, lot,connection):
     try:
-        connection = getConnection()
         cursor = connection.cursor()
         query = 'SELECT * FROM Houses WHERE Neighborhood = :neighborhood AND Lot = :lot AND Block = :block'
         cursor.execute(query, {'neighborhood':neighborhood,'lot': lot, 'block': block})
@@ -45,11 +44,10 @@ def selectSingle(neighborhood, block, lot):
         print("Error:", e)
     finally:
         cursor.close()
-        connection.close()
 
-def selectBlock(block):
+
+def selectBlock(block,connection):
     try:
-        connection = getConnection()
         cursor = connection.cursor()
         query = 'SELECT * FROM Houses WHERE Block = :block'
         cursor.execute(query, {'block': block})
@@ -59,14 +57,11 @@ def selectBlock(block):
         print("Error:", e)
     finally:
         cursor.close()
-        connection.close()
+        
 
-def modelCountsBlockElevation(neighborhood, block,elevation):
+def modelCountsBlockElevation(neighborhood, block,elevation,connection):
     try:
-        connection = getConnection()
         cursor = connection.cursor()
-       # query = 'SELECT Model, Elevation FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood AND Elevation = :elevation GROUP BY Model'
-
         query = 'SELECT Model, Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood AND Elevation = :elevation GROUP BY Model'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood, 'elevation' : elevation})
         results = cursor.fetchall()
@@ -77,13 +72,10 @@ def modelCountsBlockElevation(neighborhood, block,elevation):
         print("Error:", e)
     finally:
         cursor.close()
-        connection.close()
 
-def blockSize(neighborhood, block):
+def blockSize(neighborhood, block,connection):
     try:
-        connection = getConnection()
         cursor = connection.cursor()
-       
         query = 'SELECT Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})
         results = cursor.fetchall()
@@ -94,6 +86,4 @@ def blockSize(neighborhood, block):
         print("Error:", e)
     finally:
         cursor.close()
-        connection.close()
 
-selectAll()

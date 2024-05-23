@@ -6,8 +6,11 @@ sys.path.append(parent_dir)
 
 from House.exceptions import *
 from Queries.query import *
+from Connection.connection import getConnection
 
 class House:
+
+    connection = None
 
     elevationToColorDict = {'CL' : ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1'],
                         'CR' : ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1'],
@@ -34,6 +37,14 @@ class House:
         self.right = right
         self.corner = corner
         self.pair = pair
+        if (House.connection is None):
+            try:
+                House.connection = getConnection()
+            except Exception as e:
+                print("Caught Error:",e)
+            
+                
+        
 
     ##Effects: Returns an array of neighborhood, block, lot for this house
     def getID(self):
@@ -88,9 +99,6 @@ class House:
             possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
         return possibleColors
         
-
-    
-    
     ##Effects: Returns a list of all models this house can be, Throws InvalidFootageException if this house does not have valid Footage
     def models(self):
         id = self.getID()
@@ -100,7 +108,6 @@ class House:
         else:
             raise InvalidFootageException(footage)
         
-
     def modelsForSize(self,possibleModels):
         id = self.getID()
         elevation = self.getElevation(id[0],id[1],id[2])
@@ -143,11 +150,6 @@ class House:
 
             return possibleModels
             
-
-
-
-
-
     ##Effects: Returns a list of all elevations this house can be
     def elevations(self):
         elevationList = []
@@ -218,7 +220,7 @@ class House:
         possibleElevations = house.elevationDict
         houseArray = house.getID()
         houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
-        houseBlock = selectBlock(house.block)
+        houseBlock = selectBlock(house.block,House.connection)
         # loops through houses on the block
         for neighbour in houseBlock:
             elevation = house.getElevation(neighbour[8], neighbour[3], neighbour[4])
@@ -273,7 +275,7 @@ class House:
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
     def getColor(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot)
+        result = selectSingle(neighborhood,block,lot,House.connection)
         if (len(result) == 0):
             return ""
         else:
@@ -283,18 +285,21 @@ class House:
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
+  
     def getModel(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot)
+        result = selectSingle(neighborhood,block,lot,House.connection)
         if (len(result) == 0):
             return ""
         else:
             return result[0][5]
 
+
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
+
     def getElevation(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot)
+        result = selectSingle(neighborhood,block,lot,House.connection)
         if (len(result) == 0):
             return ""
         else:
@@ -302,7 +307,7 @@ class House:
     
     ##Effects: Returns the footage value fo the given house
     def getFootage(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot)
+        result = selectSingle(neighborhood,block,lot, House.connection)
         if (len(result) == 0):
             return ""
         else:
@@ -311,14 +316,15 @@ class House:
     ##Effects: Returns an array of all the models and elevation pairs for houses on
     ##         the given neighborhood and block
     def getBlockModelsForElevations(self,neighborhood,block,elevation):
-        return modelCountsBlockElevation(neighborhood,block,elevation)
+        return modelCountsBlockElevation(neighborhood,block,elevation,House.connection)
     
     ##Effects: Returns the nubmer of houses on the block
     def getBlockSize(self,neighborhood,block):
-        return blockSize(neighborhood,block)[0][0]
+        return blockSize(neighborhood,block,House.connection)[0][0]
 
 
 obj = House("A",1,1,[],[],[],[],[])
+obj.getColor("Ryan",100,2)
 
 
 
