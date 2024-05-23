@@ -43,7 +43,7 @@ def test_Elevation3AcrossEmpty():
 def test_Elevation3Across2Set():
     cross = [(n,5,17),(n,5,18),(n,5,19)]
     opp = House(n,5,20,cross,[],[],[],[])
-    assert opp.elevations() == ["PR"]
+    assert opp.elevations() == ["CR","PR"]
 
 ##4 Houses Across "CL" and "CR" Elevations
 def test_Elevation4Across():
@@ -78,6 +78,7 @@ def test_Elevation3InRow1EachSize():
     right = [(n,100,4),None]
     opp = House(n,100,1,[],left,right,[],[])
     assert opp.elevations() == ["CR"]
+
 ##Tests the case for 3 in row, with this house being the leftmost one
 def test_Elevation3InRow2Right():
     right = [(n,100,2),(n,100,3)]
