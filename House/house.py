@@ -76,8 +76,8 @@ class House:
         
     ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
     def getColorsForElevation(self,possibleColors):
-        oneLeftColor = self.getColor(self.left[2][0],self.left[2][1],self.left[2][2])
-        twoLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
+        oneLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
+        twoLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
         oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
         twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
         possibleColors.remove(oneLeftColor)
@@ -109,8 +109,8 @@ class House:
             ##This house does have en elevation
 
             ##3 in row rule
-            oneLeftModel = self.getModel(self.left[2][0],self.left[2][1],self.left[2][2])
-            twoLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2])
+            oneLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2])
+            twoLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2])
             oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2])
             twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2])
             if (oneLeftModel == twoLeftModel):
@@ -121,7 +121,7 @@ class House:
                 possibleModels.remove(twoRightModel)
 
             ##Two away / corner Rule
-            effectsMod = [self.left[2],self.left[1],self.right[0],self.right[1]]
+            effectsMod = [self.left[0],self.left[1],self.right[0],self.right[1]]
 
        
             for h in self.corner:
