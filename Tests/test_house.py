@@ -90,14 +90,33 @@ def test_Elevation3InRow2Left():
     opp = House(n,100,1,[],left,[],[],[])
     assert opp.elevations() == ["PR"]
 
-@pytest.mark.skip(reason="This test is not done")
-def test_Elevation2Appart():
-    print("stub")
+def test_Elevation2AppartOneAwayLeft():
+    left = [None,(n,100,2)]
+    opp = House(n,100,1,[],left,[],[],[])
+    assert sorted(opp.elevations()) == sorted(["CR","PR"])
 
-@pytest.mark.skip(reason="This test is not done")
-def test_ElevationConers():
-    print("stub")
+def test_Elevation2AppartTwoAwayLeft():
+    left = [(n,100,3),None]
+    opp = House(n,100,1,[],left,[],[],[])
+    assert sorted(opp.elevations()) == sorted(["CL","PR"])
 
-@pytest.mark.skip(reason="This test is not done")
-def test_elevationGeneral():
-    print("stub")
+def test_Elevation2AppartOneAwayRight():
+    right = [(n,100,3),None]
+    opp = House(n,100,1,[],[],right,[],[])
+    assert sorted(opp.elevations()) == sorted(["CL","PR"])
+
+def test_Elevation2AppartTwoAwayRight():
+    right = [None,(n,100,4)]
+    opp = House(n,100,1,[],[],right,[],[])
+    assert sorted(opp.elevations()) == sorted(["CL","CR"])
+
+def test_ElevationConers1Corner():
+    corn = [(n,100,4)]
+    opp = House(n,100,1,[],[],[],corn,[])
+    assert sorted(opp.elevations()) == sorted(["CL","CR"])
+
+def test_ElevationConers3Corners():
+    corn = [(n,100,4),(n,100,3),(n,100,2)]
+    opp = House(n,100,1,[],[],[],corn,[])
+    assert opp.elevations() == []
+
