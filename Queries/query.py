@@ -46,11 +46,11 @@ def selectSingle(neighborhood, block, lot,connection):
         cursor.close()
 
 
-def selectBlock(block,connection):
+def selectBlock(neighborhood,block,connection):
     try:
         cursor = connection.cursor()
-        query = 'SELECT * FROM Houses WHERE Block = :block'
-        cursor.execute(query, {'block': block})
+        query = 'SELECT * FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
+        cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})
         results = cursor.fetchall()
         return results
     except Exception as e:
@@ -86,4 +86,5 @@ def blockSize(neighborhood, block,connection):
         print("Error:", e)
     finally:
         cursor.close()
+
 

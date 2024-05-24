@@ -226,7 +226,7 @@ class House:
         possibleElevations = house.elevationDict
         houseArray = house.getID()
         houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
-        houseBlock = selectBlock(house.block,House.connection)
+        houseBlock = selectBlock(house.neighborhood,house.block,House.connection)
         # loops through houses on the block
         for neighbour in houseBlock:
             elevation = neighbour[6]
