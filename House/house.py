@@ -8,6 +8,7 @@ sys.path.append(parent_dir)
 from House.exceptions import *
 from Queries.query import *
 from Connection.connection import getConnection
+from Threads.retThread import RetThread
 
 class House:
 
@@ -100,35 +101,39 @@ class House:
     ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
     def getColorsForElevation(self,possibleColors):
         colors = []
-        if (len(self.left) > 1 and self.left[1] is not None):
-            colors.append(self.getColor(self.left[1][0],self.left[1][1],self.left[1][2]))
-        
-        if (len(self.left) >= 1 and self.left[0] is not None):
-            colors.append(self.getColor(self.left[0][0],self.left[0][1],self.left[0][2]))
-        
-        if (len(self.right) >= 1 and self.right[0] is not None):
-            print("right1")
-            colors.append(self.getColor(self.right[0][0],self.right[0][1],self.right[0][2]))
-        
-        if (len(self.right) > 1 and self.right[1] is not None):
-            print("right2")
-            colors.append(self.getColor(self.right[1][0],self.right[1][1],self.right[1][2]))
-        
-        print("here")
+        threads = []
 
+        if (len(self.left) > 1 and self.left[1] is not None):
+            t = RetThread(target = self.getColor, args=(self.left[1][0],self.left[1][1],self.left[1][2]))
+            t.start()
+            threads.append(t)
+        if (len(self.left) >= 1 and self.left[0] is not None):
+            t = RetThread(target = self.getColor, args=(self.left[0][0],self.left[0][1],self.left[0][2]))
+            t.start()
+            threads.append(t)
+        if (len(self.right) >= 1 and self.right[0] is not None):
+            t = RetThread(target = self.getColor, args=(self.right[0][0],self.right[0][1],self.right[0][2]))
+            t.start()
+            threads.append(t)
+        if (len(self.right) > 1 and self.right[1] is not None):
+            t = RetThread(target = self.getColor, args=(self.right[1][0],self.right[1][1],self.right[1][2]))
+            t.start()
+            threads.append(t)
+
+        for cross in self.across:
+            t = RetThread(target = self.getColor, args=(cross[0],cross[1],cross[2]))
+            t.start()
+            threads.append(t)
+
+        for t in threads:
+            colors.append(t.join())
+            
         for c in colors:
-            print(c)
-            print(possibleColors)
             try:
                 possibleColors.remove(c)
             except ValueError as e:
-                pass
-        
-        for cross in self.across:
-            try:
-                possibleColors.remove(self.getColor(cross[0],cross[1],cross[2]))
-            except ValueError as e:
-                pass
+                pass 
+
         return possibleColors
         
     ##Effects: Returns a list of all models this house can be, Throws InvalidFootageException if this house does not have valid Footage
