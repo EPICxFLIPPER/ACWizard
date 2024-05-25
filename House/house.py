@@ -28,6 +28,15 @@ class House:
         }
 
     ##Constructor, initilizes across, left, right, corner to be empty
+    ## neighborhood - String
+    ## block - int
+    ## lot - int
+    ## across - Array of Tuple
+    ## left - Array of Tuple size 2, index 0 is two to left, index 1 is directly left
+    ## right - Array of Tuple size 2, index 0 is directly right, index 1 is two to the right
+    ## corner - Array of Tuple
+    ## pari - the house that is a pair of this if it is a town house
+    ## Tuples consist of (neighborhood,block,lot) of reatlional houses
     def __init__(self,neighborhood,block,lot,across,left,right,corner,pair):
         self.neighborhood = neighborhood
         self.block = block
@@ -87,14 +96,24 @@ class House:
         
     ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
     def getColorsForElevation(self,possibleColors):
-        oneLeftColor = self.getColor(self.left[1][0],self.left[1][1],self.left[1][2])
-        twoLeftColor = self.getColor(self.left[0][0],self.left[0][1],self.left[0][2])
-        oneRightColor = self.getColor(self.right[0][0],self.right[0][1],self.right[0][2])
-        twoRightColor = self.getColor(self.right[1][0],self.right[1][1],self.right[1][2])
-        possibleColors.remove(oneLeftColor)
-        possibleColors.remove(twoLeftColor)
-        possibleColors.remove(oneRightColor)
-        possibleColors.remove(twoRightColor)
+        colors = []
+        if (self.left[0] is not None):
+            colors.append(self.getColor(self.left[1][0],self.left[1][1],self.left[1][2]))
+        
+        if (self.left[1] is not None):
+            colors.append(self.getColor(self.left[0][0],self.left[0][1],self.left[0][2]))
+        
+        if (self.right[0] is not None):
+            colors.append(self.getColor(self.right[0][0],self.right[0][1],self.right[0][2]))
+        
+        if (self.right[1] is not None):
+            colors.append(self.getColor(self.right[1][0],self.right[1][1],self.right[1][2]))
+        
+
+        for c in colors:
+            possibleColors.remove(c)
+        
+        
         for cross in self.across:
             possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
         return possibleColors
@@ -114,17 +133,29 @@ class House:
 
         if (elevation != None and elevation != " "):
             ##This house does have en elevation
+            oneleftModel = None
+            twoLeftModel = None
+            oneRightModel = None
+            twoRightModel = None
+
+            if (self.left[1] is not None):
+                oneLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2])
+        
+            if (self.left[0] is not None):
+                twoLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2])
+        
+            if (self.right[0] is not None):
+                oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2])
+        
+            if (self.right[1] is not None):
+                twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2])
 
             ##3 in row rule
-            oneLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2])
-            twoLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2])
-            oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2])
-            twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2])
-            if (oneLeftModel == twoLeftModel):
+            if (oneLeftModel == twoLeftModel and (oneLeftModel is not None) and (twoLeftModel is not None)):
                 possibleModels.remove(oneLeftModel)
-            if (oneLeftModel == oneRightModel):
+            if (oneLeftModel == oneRightModel and (oneLeftModel is not None) and (oneRightModel is not None)):
                 possibleModels.remove(oneLeftModel)
-            if (oneRightModel == twoRightModel):
+            if (oneRightModel == twoRightModel and (oneRightModel is not None) and (twoRightModel is not None)):
                 possibleModels.remove(twoRightModel)
 
             ##Two away / corner Rule
@@ -135,7 +166,7 @@ class House:
                 effectsMod.append(h)
 
             for h in effectsMod:
-                if (self.getElevation(h[0],h[1],h[2]) == elevation):
+                if ((h is not None) and self.getElevation(h[0],h[1],h[2]) == elevation):
                     possibleModels.remove(self.getModel(h[0],h[1],h[2]))
 
             ## 30% Rule
@@ -226,7 +257,7 @@ class House:
         possibleElevations = house.elevationDict
         houseArray = house.getID()
         houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
-        houseBlock = selectBlock(house.block,House.connection)
+        houseBlock = selectBlock(house.neighborhood,house.block,House.connection)
         # loops through houses on the block
         for neighbour in houseBlock:
             elevation = neighbour[6]
@@ -331,9 +362,6 @@ class House:
     def getBlockSize(self,neighborhood,block):
         return blockSize(neighborhood,block,House.connection)[0][0]
 
-
-obj = House("A",1,1,[],[],[],[],[])
-obj.getColor("Ryan",100,2)
 
 
 
