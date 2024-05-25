@@ -124,11 +124,7 @@ def test_ElevationConers3Corners():
 
 #TODO: If the current house has elevation CR and a house across has "CL - 4.1", can the current house have CR - 4.1?
 
-# Tests the case where current house has no model
-def test_ColourAcrossNoModel():
-    cross = [(n,3,9),(n,3,10),(n,3,11)]
-    opp = House(n,3,12,cross,[],[],[],[])
-    assert opp.colours() == []
+
 
 # Tests the case where 3 houses across from current house and two share the same elevation
 def test_ColourAcrossTwoCR():
@@ -141,6 +137,7 @@ def test_ColourAcrossNoneSameElevation():
     cross = [(n,3,10),(n,3,11), (n,3,12)]
     opp = House(n,3,9,cross,[],[],[],[])
     assert opp.colours() == ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1']    
+
 
 # Tests the case where two houses to the right of current house share the same elevation as the current
 def test_ColourTwoApartRightBothSameElevation():

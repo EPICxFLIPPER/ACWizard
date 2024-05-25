@@ -1,5 +1,6 @@
 import sys
 import os
+import copy
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
@@ -84,38 +85,50 @@ class House:
         self.corner.append(house)
 
     ##Effects: Returns a list of all colours this house can be,
-    ##         If this house does not yet have a model, returns []
+    ##         If this house does not yet have a elevation, returns []
     ##         If this house does not have a vailid elevation, throws invalid elevation exception
     def colours(self):
         id = self.getID()
         elevation = self.getElevation(id[0],id[1],id[2])
         if (elevation == "PR" or elevation == "CR" or elevation == "CL"):
-            return self.getColorsForElevation(self.elevationToColorDict[elevation])
+            return self.getColorsForElevation(copy.deepcopy(self.elevationToColorDict[elevation]))
+        elif (elevation is None or elevation == " " or elevation == ""):
+            return []
         else:
             raise InvalidElevationException(elevation)
         
     ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
     def getColorsForElevation(self,possibleColors):
         colors = []
-        if (self.left[0] is not None):
+        if (len(self.left) > 1 and self.left[1] is not None):
             colors.append(self.getColor(self.left[1][0],self.left[1][1],self.left[1][2]))
         
-        if (self.left[1] is not None):
+        if (len(self.left) >= 1 and self.left[0] is not None):
             colors.append(self.getColor(self.left[0][0],self.left[0][1],self.left[0][2]))
         
-        if (self.right[0] is not None):
+        if (len(self.right) >= 1 and self.right[0] is not None):
+            print("right1")
             colors.append(self.getColor(self.right[0][0],self.right[0][1],self.right[0][2]))
         
-        if (self.right[1] is not None):
+        if (len(self.right) > 1 and self.right[1] is not None):
+            print("right2")
             colors.append(self.getColor(self.right[1][0],self.right[1][1],self.right[1][2]))
         
+        print("here")
 
         for c in colors:
-            possibleColors.remove(c)
-        
+            print(c)
+            print(possibleColors)
+            try:
+                possibleColors.remove(c)
+            except ValueError as e:
+                pass
         
         for cross in self.across:
-            possibleColors.remove(self.getColor(cross[1],cross[2],cross[3]))
+            try:
+                possibleColors.remove(self.getColor(cross[0],cross[1],cross[2]))
+            except ValueError as e:
+                pass
         return possibleColors
         
     ##Effects: Returns a list of all models this house can be, Throws InvalidFootageException if this house does not have valid Footage
