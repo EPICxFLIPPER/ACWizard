@@ -121,3 +121,83 @@ def test_ElevationConers3Corners():
     opp = House(n,100,1,[],[],[],corn,[])
     assert opp.elevations() == []
 
+
+#TODO: If the current house has elevation CR and a house across has "CL - 4.1", can the current house have CR - 4.1?
+
+# Tests the case where current house has no model
+def test_ColourAcrossNoModel():
+    cross = [(n,3,9),(n,3,10),(n,3,11)]
+    opp = House(n,3,12,cross,[],[],[],[])
+    assert opp.colours() == []
+
+# Tests the case where 3 houses across from current house and two share the same elevation
+def test_ColourAcrossTwoCR():
+    cross = [(n,3,10),(n,3,11), (n,3,12)]
+    opp = House(n,2,8,cross,[],[],[],[])
+    assert opp.colours() == ['CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where 3 houses across from current house and none share the same elevation
+def test_ColourAcrossNoneSameElevation():
+    cross = [(n,3,10),(n,3,11), (n,3,12)]
+    opp = House(n,3,9,cross,[],[],[],[])
+    assert opp.colours() == ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1']    
+
+# Tests the case where two houses to the right of current house share the same elevation as the current
+def test_ColourTwoApartRightBothSameElevation():
+    right = [(n,3,11),(n,3,12)]
+    opp = House(n,2,8,[],[],right,[],[])
+    assert opp.colours() == ['CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where two houses to the right of current house do not share the current house's elevation
+def test_ColourTwoApartRightBothDifferentElevation():
+    right = [(n,3,9),(n,3,11)]
+    opp = House(n,3,10,[],[],right,[],[])
+    assert opp.colours() == ['PR - 1.1', 'PR - 2.1', 'PR - 3.1', 'PR - 4.1','PR - 5.1','PR - 6.1','PR - 7.1','PR - 8.1','PR - 9.1','PR - 10.1']
+
+# Test the case where one out of two houses to the right share the current house's elevation
+def test_ColourTwoApartRightOneSameElevation():
+    right = [(n,3,10),(n,3,11)]
+    opp = House(n,2,8,[],[],right,[],[])
+    assert opp.colours() == ['CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where the current house is at the right end of the row
+def test_ColourTwoApartRightEndOfRow():
+    right = [None,None]
+    opp = House(n,2,8,[],[],right,[],[])
+    assert opp.colours() == ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where the current house is one before the end of the row
+def test_ColourTwoApartRightAlmostEndOfRow():
+    right = [(n,3,11),None]
+    opp = House(n,2,8,[],[],right,[],[])
+    assert opp.colours() == ['CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where both houses to the left share current house's elevation
+def test_ColourTwoApartLeftBothSameElevation():
+    left = [(n,3,11),(n,3,12)]
+    opp = House(n,2,8,[],left,[],[],[])
+    assert opp.colours() == ['CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where both houses to the left do not share the current house's elevation
+def test_ColourTwoApartLeftBothDifferentElevation():
+    left = [(n,3,9),(n,3,11)]
+    opp = House(n,3,10,[],left,[],[],[])
+    assert opp.colours() == ['PR - 1.1', 'PR - 2.1', 'PR - 3.1', 'PR - 4.1','PR - 5.1','PR - 6.1','PR - 7.1','PR - 8.1','PR - 9.1','PR - 10.1']
+
+# Tests the case where one out of two of the houses to the left share the current house's elevation
+def test_ColourTwoApartLeftOneSameElevation():
+    left = [(n,3,10),(n,3,11)]
+    opp = House(n,2,8,[],left,[],[],[])
+    assert opp.colours() == ['CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where the current house is at the left end of the row
+def test_ColourTwoApartLeftEndOfRow():
+    left = [None,None]
+    opp = House(n,2,8,[],left,[],[],[])
+    assert opp.colours() == ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+# Tests the case where the current house is one before the left end of the row
+def test_ColourTwoApartLeftAlmostEndOfRow():
+    left = [None,(n,3,11)]
+    opp = House(n,2,8,[],left,[],[],[])
+    assert opp.colours() == ['CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
