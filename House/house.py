@@ -141,7 +141,7 @@ class House:
         id = self.getID()
         footage = self.getFootage(id[0],id[1],id[2])
         if (footage == '44 ft\'s' or footage ==  '36 ft\'s' or footage ==  '24 ft\'s'):
-            return self.modelsForSize(self.footageToModels(footage))
+            return self.modelsForSize(copy.deepcopy(self.footageToModels[footage]))
         else:
             raise InvalidFootageException(footage)
         
@@ -149,55 +149,119 @@ class House:
         id = self.getID()
         elevation = self.getElevation(id[0],id[1],id[2])
 
-        if (elevation != None and elevation != " "):
+        if (elevation != None and elevation != " " and elevation != ""):
             ##This house does have en elevation
-            oneleftModel = None
-            twoLeftModel = None
-            oneRightModel = None
-            twoRightModel = None
+            
+            modelThreads = []
+            elevationThreads = []
+            toRemove = []
 
-            if (self.left[1] is not None):
-                oneLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2])
-        
-            if (self.left[0] is not None):
-                twoLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2])
-        
-            if (self.right[0] is not None):
-                oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2])
-        
-            if (self.right[1] is not None):
-                twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2])
-
-            ##3 in row rule
-            if (oneLeftModel == twoLeftModel and (oneLeftModel is not None) and (twoLeftModel is not None)):
-                possibleModels.remove(oneLeftModel)
-            if (oneLeftModel == oneRightModel and (oneLeftModel is not None) and (oneRightModel is not None)):
-                possibleModels.remove(oneLeftModel)
-            if (oneRightModel == twoRightModel and (oneRightModel is not None) and (twoRightModel is not None)):
-                possibleModels.remove(twoRightModel)
+            threeThread = RetThread(target = self.ModelsThreeInRow)
+            threeThread.start()
+            
+            
 
             ##Two away / corner Rule
-            effectsMod = [self.left[0],self.left[1],self.right[0],self.right[1]]
-
+            effectsMod = []
+            if (len(self.left) > 1 and self.left[1] is not None):
+                effectsMod.append(self.left[1])
+            if (len(self.left) >= 1 and self.left[0] is not None):
+                effectsMod.append(self.left[0])
+            if (len(self.right) >= 1 and self.right[0] is not None):
+                effectsMod.append(self.right[0])
+            if (len(self.right) > 1 and self.right[1] is not None):
+                effectsMod.append(self.right[1])
        
             for h in self.corner:
                 effectsMod.append(h)
 
             for h in effectsMod:
-                if ((h is not None) and self.getElevation(h[0],h[1],h[2]) == elevation):
-                    possibleModels.remove(self.getModel(h[0],h[1],h[2]))
+                tm = RetThread(target = self.getModel, args=(h[0],h[1],h[2]))
+                tm.start()
+                te = RetThread(target= self.getElevation, args=(h[0],h[1],h[2]))
+                te.start()
+                modelThreads.append(tm)
+                elevationThreads.append(te)
+
+            for index in range(len(modelThreads)):
+                mod = modelThreads[index].join()
+                ele = elevationThreads[index].join()
+                if (ele == elevation):
+                    toRemove.append(mod)
 
             ## 30% Rule
-            modelCounts = self.modelCountsBlockElevation(id[0],id[1],elevation)
+            modelCounts = self.getBlockModelsForElevations(id[0],id[1],elevation)
             blocksize = self.getBlockSize(id[0],id[1])
             cutoff = blocksize/3
 
             ##Possible need for delta when dividing
             for p in modelCounts:
                 if (p[1] + 1 > cutoff):
-                    possibleModels.remove(p[0])
+                    toRemove.append(p[0])
+
+            toRemove.extend(threeThread.join())
+
+            for r in toRemove:
+                try:
+                    possibleModels.remove(r)
+                except ValueError as e:
+                    pass 
+
+
 
             return possibleModels
+        
+    ##Effects: Retuns a list of all the modles this house can not be via the 3 in row rule    
+    def ModelsThreeInRow(self):
+        oneLeftModel = None
+        twoLeftModel = None
+        oneRightModel = None
+        twoRightModel = None
+        oneLeftBool = 0
+        twoLeftBool = 0
+        oneRightBool = 0
+        twoRightBool = 0
+        threads = [None,None,None,None]
+        notModels = []
+
+        if (self.left[1] is not None):
+            oneLeftBool = 1
+            t = RetThread(target = self.getModel, args=(self.left[1][0],self.left[1][1],self.left[1][2]))
+            t.start()
+            threads[0] = t
+        if (self.left[0] is not None):
+            twoLeftBool = 1
+            t = RetThread(target = self.getModel, args=(self.left[0][0],self.left[0][1],self.left[0][2]))
+            t.start()
+            threads[1] = t 
+        if (self.right[0] is not None):
+            oneRightBool = 1
+            t = RetThread(target = self.getModel, args=(self.right[0][0],self.right[0][1],self.right[0][2]))
+            t.start()
+            threads[2] = t
+        if (self.right[1] is not None):
+            twoRightBool = 1
+            t = RetThread(target = self.getModel, args=(self.right[1][0],self.right[1][1],self.right[1][2]))
+            t.start()
+            threads[3] = t
+
+        if (oneLeftBool):
+            oneLeftBool = threads[0].join()
+        if (twoLeftBool):
+            oneRightModel = threads[1].join()
+        if (oneRightBool):
+            oneRightModel = threads[2].join()
+        if (twoRightBool):
+            oneRightModel = threads[3].join()
+        
+        if (oneLeftModel == twoLeftModel and (oneLeftModel is not None) and (twoLeftModel is not None)):
+            notModels.append(oneLeftModel)
+        if (oneLeftModel == oneRightModel and (oneLeftModel is not None) and (oneRightModel is not None)):
+            notModels.append(oneLeftModel)
+        if (oneRightModel == twoRightModel and (oneRightModel is not None) and (twoRightModel is not None)):
+            notModels.append(twoRightModel)
+
+        return notModels
             
     ##Effects: Returns a list of all elevations this house can be
     def elevations(self):
