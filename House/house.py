@@ -1,6 +1,7 @@
 import sys
 import os
 import copy
+import threading
 
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
@@ -264,6 +265,7 @@ class House:
     ##Effects: Returns a list of all elevations this house can be
     def elevations(house):
         elevationList = ["CR","PR","CL"]
+        lock = threading.Lock()
 
         def checkCorner():
             threads = []
@@ -274,8 +276,10 @@ class House:
 
             for t in threads:
                 cornerHouseElevation = t.join()
+                lock.acquire()
                 if (cornerHouseElevation is not None and cornerHouseElevation in elevationList):
                     elevationList.remove(cornerHouseElevation)
+                lock.release()
 
         ##TODO make threaded
         def alternatingElevation():
@@ -309,12 +313,16 @@ class House:
             if houseModel is not None:
                 if rightHouse is not None and rightHouseModel is not None:
                     if rightHouseModel == houseModel:
+                        lock.acquire()
                         if rightHouseElevation is not None and rightHouseElevation in elevationList:
                             elevationList.remove(rightHouseElevation)
+                        lock.release()
                 if leftHouse is not None and leftHouseModel is not None:
                     if leftHouseModel == houseModel:
+                        lock.acquire()
                         if leftHouseElevation is not None and leftHouseElevation in elevationList:
                             elevationList.remove(leftHouseElevation)
+                        lock.release()
 
         def acrossElevation():
             # check across houses: directly across, left one of direct, right one of direct
@@ -327,8 +335,10 @@ class House:
             for t in threads:
                 neighbourElevation = t.join()
                 if neighbourElevation is not None:
+                    lock.acquire()
                     if neighbourElevation in elevationList:
                         elevationList.remove(neighbourElevation)
+                    lock.release()
 
         def maxThree():
             possibleElevations = house.elevationDict
@@ -346,8 +356,10 @@ class House:
                             possibleElevations[elevation] += 1
             for elevation in possibleElevations:
                 if possibleElevations[elevation]/len(houseBlock) >= 0.3:
+                    lock.acquire()
                     if elevation in elevationList:
                         elevationList.remove(elevation)
+                    lock.release()
                 # reset counts
                 possibleElevations[elevation] = 0
 
@@ -378,20 +390,30 @@ class House:
                 # if no neighbours within 2 houses have elevation, it is valid: add it to the list
                 if possibleElevations[elevation] != 0:
                     if elevation != '':
+                        lock.acquire()
                         try:
                             elevationList.remove(elevation)
                         except ValueError as e:
                             pass
+                        lock.release()
                 # reset elevation count
                 possibleElevations[elevation] = 0
 
             # return list of valid elevations
-            
-        twoApart()
-        maxThree()
-        acrossElevation()
-        alternatingElevation()
-        checkCorner()
+
+        threads = [
+            RetThread(target=twoApart),
+            RetThread(target=maxThree),
+            RetThread(target=acrossElevation),
+            RetThread(target=alternatingElevation),
+            RetThread(target=checkCorner) ]
+        
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
+
         return elevationList
 
 
