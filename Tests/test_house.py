@@ -198,3 +198,28 @@ def test_ColourTwoApartLeftAlmostEndOfRow():
     left = [None,(n,3,11)]
     opp = House(n,2,8,[],left,[],[],[])
     assert opp.colours() == ['CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
+
+
+def test_ModelMaxThreeHasThree():
+    left = [(n,30,1),(n,30,2)]
+    right = [(n,30,3),None]
+    opp = House(n,2,7,[],left,right,[],[])
+    assert opp.models() == ['Cypress','Fairview','Monarch','Whistler','Yamnuska','Norquay']
+
+def test_ModelMaxThreeDoesNotHaveThree():
+    left = [(n,30,1),(n,30,2)]
+    right = [(n,3,10),(n,3,11)]
+    opp = House(n,2,7,[],left,right,[],[])
+    assert opp.models() == ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay']
+
+def test_ModelMaxThreeEmptyNeighbours():
+    left = [None,None]
+    right = [None,None]
+    opp = House(n,2,7,[],left,right,[],[])
+    assert opp.models() == ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay']
+
+def test_ModelMaxThreeTwoLeftTwoRight():
+    left = [('Cityscape',41,48),('CityScape',41,49)]
+    right = [('CityScape',41,57),('CityScape',41,58)]
+    opp = House(n,2,7,[],left,right,[],[])
+    assert opp.models() == ['Cypress','Fullerton','Monarch','Yamnuska','Norquay']
