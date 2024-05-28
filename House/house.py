@@ -263,7 +263,9 @@ class House:
             
     ##Effects: Returns a list of all elevations this house can be
     def elevations(house):
-        def checkCorner(elevationList):
+        elevationList = ["CR","PR","CL"]
+
+        def checkCorner():
             threads = []
             for cornerHouse in house.corner:
                 t = RetThread(target=house.getElevation,args=(cornerHouse[0], cornerHouse[1], cornerHouse[2]))
@@ -275,10 +277,8 @@ class House:
                 if (cornerHouseElevation is not None and cornerHouseElevation in elevationList):
                     elevationList.remove(cornerHouseElevation)
 
-            return elevationList
-    
         ##TODO make threaded
-        def alternatingElevation(elevationList):
+        def alternatingElevation():
             # get characteristics of left house
             if len(house.left) == 0:
                 leftHouseModel = ""
@@ -316,9 +316,7 @@ class House:
                         if leftHouseElevation is not None and leftHouseElevation in elevationList:
                             elevationList.remove(leftHouseElevation)
 
-            return elevationList
-
-        def acrossElevation(elevationList):
+        def acrossElevation():
             # check across houses: directly across, left one of direct, right one of direct
             threads = []
             for cross in house.across:
@@ -332,10 +330,7 @@ class House:
                     if neighbourElevation in elevationList:
                         elevationList.remove(neighbourElevation)
 
-            return elevationList
-
-
-        def maxThree(elevationList):
+        def maxThree():
             possibleElevations = house.elevationDict
             houseArray = house.getID()
             houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
@@ -355,9 +350,8 @@ class House:
                         elevationList.remove(elevation)
                 # reset counts
                 possibleElevations[elevation] = 0
-            return elevationList
 
-        def twoApart(elevationList):
+        def twoApart():
             possibleElevations = house.elevationDict
             houseArray = house.getID()
             houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
@@ -382,26 +376,25 @@ class House:
             # loop through elevation dictionary
             for elevation in possibleElevations:
                 # if no neighbours within 2 houses have elevation, it is valid: add it to the list
-                if possibleElevations[elevation] == 0:
+                if possibleElevations[elevation] != 0:
                     if elevation != '':
-                        elevationList.append(elevation)
+                        try:
+                            elevationList.remove(elevation)
+                        except ValueError as e:
+                            pass
                 # reset elevation count
                 possibleElevations[elevation] = 0
 
             # return list of valid elevations
-            return elevationList
             
-
-
-        elevationList = []
-        elevationList = twoApart(elevationList)
-        elevationList = maxThree(elevationList)
-        elevationList = acrossElevation(elevationList)
-        elevationList = alternatingElevation(elevationList)
-        elevationList = checkCorner(elevationList)
+        twoApart()
+        maxThree()
+        acrossElevation()
+        alternatingElevation()
+        checkCorner()
         return elevationList
 
-    ##Effects: Preforms the Coner check for elevations
+
 
         
 
