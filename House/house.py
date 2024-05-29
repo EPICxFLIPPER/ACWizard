@@ -185,6 +185,9 @@ class House:
             for index in range(len(modelThreads)):
                 mod = modelThreads[index].join()
                 ele = elevationThreads[index].join()
+                print(mod)
+                print(ele)
+                print("here")
                 if (ele == elevation):
                     toRemove.append(mod)
 
@@ -199,7 +202,7 @@ class House:
                     toRemove.append(p[0])
 
             toRemove.extend(threeThread.join())
-
+            print(toRemove)
             for r in toRemove:
                 try:
                     possibleModels.remove(r)
@@ -223,22 +226,22 @@ class House:
         threads = [None,None,None,None]
         notModels = []
 
-        if (self.left[1] is not None):
+        if (len(self.left) > 1 and self.left[1] is not None):
             oneLeftBool = 1
             t = RetThread(target = self.getModel, args=(self.left[1][0],self.left[1][1],self.left[1][2]))
             t.start()
             threads[0] = t
-        if (self.left[0] is not None):
+        if (len(self.left) >= 1 and self.left[0] is not None):
             twoLeftBool = 1
             t = RetThread(target = self.getModel, args=(self.left[0][0],self.left[0][1],self.left[0][2]))
             t.start()
             threads[1] = t 
-        if (self.right[0] is not None):
+        if (len(self.right) >= 1 and self.right[0] is not None):
             oneRightBool = 1
             t = RetThread(target = self.getModel, args=(self.right[0][0],self.right[0][1],self.right[0][2]))
             t.start()
             threads[2] = t
-        if (self.right[1] is not None):
+        if (len(self.right) > 1 and self.right[1] is not None):
             twoRightBool = 1
             t = RetThread(target = self.getModel, args=(self.right[1][0],self.right[1][1],self.right[1][2]))
             t.start()

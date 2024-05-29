@@ -219,7 +219,8 @@ def test_ModelMaxThreeEmptyNeighbours():
     assert opp.models() == ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay']
 
 def test_ModelMaxThreeTwoLeftTwoRight():
-    left = [('Cityscape',41,48),('CityScape',41,49)]
-    right = [('CityScape',41,57),('CityScape',41,58)]
+    left = [('Cityscape',41,48),('Cityscape',41,49)]
+    right = [('Cityscape',41,57),('Cityscape',41,58)]
     opp = House(n,2,7,[],left,right,[],[])
     assert opp.models() == ['Cypress','Fullerton','Monarch','Yamnuska','Norquay']
+    # assert opp.models() == ['Cypress','Fullerton','Monarch','Whistler','Yamnuska','Norquay']
