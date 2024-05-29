@@ -248,7 +248,7 @@ class House:
             threads[3] = t
 
         if (oneLeftBool):
-            oneLeftBool = threads[0].join()
+            oneLeftModel = threads[0].join()
         if (twoLeftBool):
             oneRightModel = threads[1].join()
         if (oneRightBool):
