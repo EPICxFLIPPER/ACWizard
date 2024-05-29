@@ -1,7 +1,7 @@
-/Connection/conn/
+/Backend/Connection/conn/
 
-/Data/housedata.xlsx
+/Backend/Data/housedata.xlsx
 
-/Data/housedata.csv
+/Backend/Data/housedata.csv
 
-/Connection/config.py
+/Backend/Connection/config.py
