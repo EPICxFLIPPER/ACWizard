@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update House</title>
+</head>
+<body>
+    <h1>Update House</h1>
+    <form method="post" action="{{ url_for('handle_update_form', neighborhood=neighborhood, block=block, lot=lot) }}">
+        <label>Model:</label>
+        <input type="text" name="model" value="{{ house[0] }}"><br>
+        <label>Elevation:</label>
+        <input type="text" name="elevation" value="{{ house[1] }}"><br>
+        <label>Color:</label>
+        <input type="text" name="color" value="{{ house[2] }}"><br>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>
