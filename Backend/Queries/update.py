@@ -7,9 +7,8 @@ from Backend.Connection.connection import getConnection
 
 ##Effects: Updates the house with neighborhood, block, lot with the given model, elevation, color
 ##TODO     If model elevation or colors is not given, then do not update that value
-def update(neighborhood, block, lot, model, elevation, colour):
+def update(neighborhood, block, lot, model, elevation, colour,connection):
     try:
-        connection = getConnection()
         cursor = connection.cursor()
         query = "UPDATE Houses SET Model = :model, Elevation = :elevation, Extcolour = :colour WHERE Neighborhood = :neighborhood AND Lot = :lot AND Block = :block"
         cursor.execute(query, {'model':model,'elevation':elevation,'colour':colour,'neighborhood':neighborhood,'lot': lot, 'block': block})
@@ -20,12 +19,3 @@ def update(neighborhood, block, lot, model, elevation, colour):
     finally:
         # Close the cursor and connection
         cursor.close()
-        connection.close()
-
-# connection = getConnection()
-# cursor = connection.cursor()
-# query = "INSERT INTO Houses (neighborhood, block, lot, model, elevation, extcolour) VALUES ('Test', 1, 1, 'A', 'B', 'C')"
-# cursor.execute(query)
-# connection.commit()
-# cursor.close()
-# connection.close()
