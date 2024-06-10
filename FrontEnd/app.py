@@ -29,14 +29,8 @@ def handle_update_form(neighborhood, block, lot):
     model = request.form['model']
     elevation = request.form['elevation']
     color = request.form['color']
-    print(neighborhood)
-    print(block)
-    print(lot)
-    print(model)
-    print(elevation)
-    print(color)
     update(neighborhood, block, lot, model, elevation, color,conn)
-    print(selectSingle(neighborhood,block,lot,conn))
+    print(selectSingle(neighborhood=neighborhood,block=block,lot=lot,connection=conn))
     return redirect(url_for('home'))
 
 
