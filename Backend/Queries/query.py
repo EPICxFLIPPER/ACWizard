@@ -20,9 +20,7 @@ def selectAll():
 
         print("Number of rows fetched:", len(results))
 
-        # Print the fetched rows
-        for row in results:
-            print(row)
+        return results
 
     except Exception as e:
         print("Error:", e)
