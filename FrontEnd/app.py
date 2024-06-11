@@ -17,36 +17,9 @@ conn = getConnection()
 def home():
     return render_template('index.html', message="Hello, Flask!")
 
-@app.route('/update/<string:neighborhood>/<int:block>/<int:lot>', methods=['GET'])
-def show_update_form(neighborhood, block, lot):
-    house = selectSingle(neighborhood,block,lot,conn)
-    if house:
-        return render_template('update.html', neighborhood=neighborhood, block=block, lot=lot, house=house)
-    else:
-        return "House not found", 404
-
-# Route to handle the form submission
-@app.route('/update/<string:neighborhood>/<int:block>/<int:lot>', methods=['POST'])
-def handle_update_form(neighborhood, block, lot):
-    model = request.form['model']
-    elevation = request.form['elevation']
-    color = request.form['color']
-    update(neighborhood, block, lot, model, elevation, color,conn)
-    print(selectSingle(neighborhood=neighborhood,block=block,lot=lot,connection=conn))
-    return redirect(url_for('home'))
-
-
-@app.route('/delete/<string:neighborhood>/<int:block>/<int:lot>', methods=['GET'])
-def delete_house(neighborhood,block,lot):
-    house = selectSingle(neighborhood,block,lot,conn)
-    if house:
-        delete(neighborhood,block,lot,conn)
-    return jsonify({'message': 'House deleted successfully'}), 200
-
 
 @app.route('/house', methods = ['GET','POST'])
 def houses():
-    print(request.method)
     if (request.method == 'GET'):
         result = selectAll()
         return jsonify(result)
@@ -61,8 +34,26 @@ def houses():
 
 
 @app.route('/house/<string:neighborhood>/<int:block>/<int:lot>', methods=['GET','PUT','DELETE'])
-def singleHouse():
-    print("stub")
+def singleHouse(neighborhood,block,lot):
+    if (request.method == 'GET'):
+        result = selectSingle(neighborhood,block,lot,conn)
+        return jsonify(result)
+    elif (request.method == 'PUT'):
+        model = request.form['model']
+        elevation = request.form['elevation']
+        colour = request.form['colour']
+
+        house = selectSingle(neighborhood,block,lot,conn)[0]
+        model = model if model is not None else house[5]
+        elevation = elevation if elevation is not None else house[6]
+        colour = colour if colour is not None else house[7]
+        update(neighborhood,block,lot,model,elevation,colour,conn)
+        return f"House updated"
+    
+    elif (request.method == 'DELETE'):
+        delete(neighborhood,block,lot,conn)
+        return jsonify({'message': 'House deleted successfully'}), 200
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
