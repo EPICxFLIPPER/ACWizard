@@ -44,9 +44,13 @@ def singleHouse(neighborhood,block,lot):
         colour = request.form['colour']
 
         house = selectSingle(neighborhood,block,lot,conn)[0]
-        model = model if model is not None else house[5]
-        elevation = elevation if elevation is not None else house[6]
-        colour = colour if colour is not None else house[7]
+        if (model is None or model == ""):
+            model = house[5]
+        if (elevation is None or elevation == ""):
+            elevation = house[6]
+        if (colour is None or colour == ""):
+            colour = house[7]
+        
         update(neighborhood,block,lot,model,elevation,colour,conn)
         return f"House updated"
     

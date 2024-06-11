@@ -11,12 +11,6 @@ from Backend.Queries.query import selectSingle
 def update(neighborhood, block, lot, model, elevation, colour,connection):
     try:
         cursor = connection.cursor()
-        if (model == ""):
-            model = selectSingle(neighborhood,block,lot,connection)[0][5]
-        if (elevation == ""):
-            elevation = selectSingle(neighborhood,block,lot,connection)[0][6]
-        if (colour == ""):
-            colour = selectSingle(neighborhood,block,lot,connection)[0][7]
         query = "UPDATE Houses SET Model = :model, Elevation = :elevation, Extcolour = :colour WHERE Neighborhood = :neighborhood AND Lot = :lot AND Block = :block"
         cursor.execute(query, {'model':model,'elevation':elevation,'colour':colour,'neighborhood':neighborhood,'lot': lot, 'block': block})
         connection.commit()

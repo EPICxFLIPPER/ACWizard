@@ -14,9 +14,9 @@ def create(neighborhood, block, lot, connection):
         cursor.execute(query, {'neighborhood':neighborhood,'lot': lot, 'block': block})
         connection.commit()
         ret = cursor.lastrowid
-
     except Exception as e:
         print("Error:", e)
+        print("HERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
     finally:
         cursor.close()
         return ret
