@@ -1,12 +1,12 @@
+##Handles specific queries needed for house logic
 import sys
 import os
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
 sys.path.append(parent_dir)
-
 from Connection.connection import getConnection
 
         
-
+##Effects: Queries the database and retuns the counts of each model for a specific block and elevation
 def modelCountsBlockElevation(neighborhood, block,elevation,connection):
     try:
         cursor = connection.cursor()
@@ -21,6 +21,7 @@ def modelCountsBlockElevation(neighborhood, block,elevation,connection):
     finally:
         cursor.close()
 
+##Effects: Queries the database and retuns the size of the specific block in the neigbohood
 def blockSize(neighborhood, block,connection):
     try:
         cursor = connection.cursor()

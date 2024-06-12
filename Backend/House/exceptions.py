@@ -1,6 +1,7 @@
-class InvalidElevationException(Exception):
-    
+##Defines any exceptions needed for the house class
 
+
+class InvalidElevationException(Exception):
     def __init__(self, elevation):
         if (elevation == " " or elevation ==  None):
             self.message = "Invalid Elevation: " + " empty"

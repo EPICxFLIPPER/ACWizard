@@ -1,17 +1,12 @@
-##Note To LIAM, you can run tests just by typing pytest when in the Tests directory
+##Tests for the programs main house model
 import os
 import sys
 import pytest
-
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
-
 from House.house import *
 
 n = "Ryan"
-
-def test_simple():
-    assert 1 + 1 == 2
 
 ##Houses across have CL and PR elevations
 def test_Elevation3AcrossMix():
@@ -91,39 +86,41 @@ def test_Elevation3InRow2Left():
     opp = House(n,100,1,[],left,[],[],[])
     assert opp.elevations() == ["PR"]
 
+##Tests the case for unique model elevations sepearated by two houses with one house one away left
 def test_Elevation2AppartOneAwayLeft():
     left = [None,(n,100,2)]
     opp = House(n,100,1,[],left,[],[],[])
     assert sorted(opp.elevations()) == sorted(["CR","PR"])
 
+##Tests the case for unique model elevations sepearated by two houses with one house two away left
 def test_Elevation2AppartTwoAwayLeft():
     left = [(n,100,3),None]
     opp = House(n,100,1,[],left,[],[],[])
     assert sorted(opp.elevations()) == sorted(["CL","PR"])
 
+##Tests the case for unique model elevations sepearated by two houses with one house one away right
 def test_Elevation2AppartOneAwayRight():
     right = [(n,100,3),None]
     opp = House(n,100,1,[],[],right,[],[])
     assert sorted(opp.elevations()) == sorted(["CL","PR"])
 
+##Tests the case for unique model elevations sepearated by two houses with one house two away right
 def test_Elevation2AppartTwoAwayRight():
     right = [None,(n,100,4)]
     opp = House(n,100,1,[],[],right,[],[])
     assert sorted(opp.elevations()) == sorted(["CL","CR"])
 
+##Tests the case for unique model elevations on corners with only one house on the corner
 def test_ElevationConers1Corner():
     corn = [(n,100,4)]
     opp = House(n,100,1,[],[],[],corn,[])
     assert sorted(opp.elevations()) == sorted(["CL","CR"])
 
+##Tests the case for unique model elevations on corners with 3 houses on the corner
 def test_ElevationConers3Corners():
     corn = [(n,100,4),(n,100,3),(n,100,2)]
     opp = House(n,100,1,[],[],[],corn,[])
     assert opp.elevations() == []
-
-
-#TODO: If the current house has elevation CR and a house across has "CL - 4.1", can the current house have CR - 4.1?
-
 
 
 # Tests the case where 3 houses across from current house and two share the same elevation
@@ -199,25 +196,28 @@ def test_ColourTwoApartLeftAlmostEndOfRow():
     opp = House(n,2,8,[],left,[],[],[])
     assert opp.colours() == ['CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1']
 
-
+# Tests the case where unique models can only be 3 in a row with alternating elevations two left one right
 def test_ModelMaxThreeHasThree():
     left = [(n,30,1),(n,30,2)]
     right = [(n,30,3),None]
     opp = House(n,2,7,[],left,right,[],[])
     assert opp.models() == ['Cypress','Fairview','Monarch','Whistler','Yamnuska','Norquay']
 
+# Tests the case where unique models can only be 3 in a row with alternating elevations two left two right
 def test_ModelMaxThreeDoesNotHaveThree():
     left = [(n,30,1),(n,30,2)]
     right = [(n,3,10),(n,3,11)]
     opp = House(n,2,7,[],left,right,[],[])
     assert opp.models() == ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay']
 
+# Tests the case where unique models can only be 3 in a row with alternating elevations no neighbors
 def test_ModelMaxThreeEmptyNeighbours():
     left = [None,None]
     right = [None,None]
     opp = House(n,2,7,[],left,right,[],[])
     assert opp.models() == ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay']
 
+# Tests the case where unique models can only be 3 in a row with alternating elevations two left two right
 def test_ModelMaxThreeTwoLeftTwoRight():
     left = [('Cityscape',41,48),('Cityscape',41,49)]
     right = [('Cityscape',41,57),('Cityscape',41,58)]

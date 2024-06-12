@@ -1,8 +1,8 @@
+##Handles queries for GET requests
 import sys
 import os
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
 sys.path.append(parent_dir)
-
 from Connection.connection import getConnection
 
 
@@ -25,7 +25,7 @@ def selectAll():
         print("Error:", e)
 
 
-##Effects, prints the house at specified block and lot number
+##Effects: Queris the single house based on its neighborhood block and lot numbers
 def selectSingle(neighborhood, block, lot,connection):
     try:
         cursor = connection.cursor()
@@ -37,7 +37,7 @@ def selectSingle(neighborhood, block, lot,connection):
     except Exception as e:
         print("Error:", e)
 
-
+##Effects: Queries all the hosues on a specific block 
 def selectBlock(neighborhood,block,connection):
     try:
         cursor = connection.cursor()

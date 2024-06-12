@@ -1,3 +1,5 @@
+##Handles the creation of the connection to the oracle database
+
 import oracledb
 import os
 import sys
@@ -7,7 +9,7 @@ import Connection.config
 
 
     
-    ##Effects: Returns the connection to the Oracle Database
+##Effects: Establishes and returns the connection to the Oracle Database
 def getConnection():
 
     connection_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))

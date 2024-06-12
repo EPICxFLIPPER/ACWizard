@@ -1,3 +1,4 @@
+##Implementation of a thread that can hold a return value
 from threading import Thread
 
 ##RetThread extends thread, allowing for return values, accessed via the join function

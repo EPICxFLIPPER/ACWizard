@@ -1,11 +1,10 @@
+## Defines the Arcitectural control logic for houses as well as the creation of house objects
 import sys
 import os
 import copy
 import threading
-
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
-
 from House.exceptions import *
 from Queries.query import *
 from Queries.read import selectSingle
@@ -13,6 +12,7 @@ from Queries.read import selectBlock
 from Connection.connection import getConnection
 from Threads.retThread import RetThread
 
+## A House object with realtional information to the the houses around it, and methods to handle arcitectrual controls
 class House:
 
     connection = None
@@ -20,11 +20,11 @@ class House:
     elevationToColorDict = {'CL' : ['CL - 1.1', 'CL - 2.1', 'CL - 3.1', 'CL - 4.1','CL - 5.1','CL - 6.1','CL - 7.1','CL - 8.1','CL - 9.1','CL - 10.1'],
                         'CR' : ['CR - 1.1', 'CR - 2.1', 'CR - 3.1', 'CR - 4.1','CR - 5.1','CR - 6.1','CR - 7.1','CR - 8.1','CR - 9.1','CR - 10.1'],
                         'PR' : ['PR - 1.1', 'PR - 2.1', 'PR - 3.1', 'PR - 4.1','PR - 5.1','PR - 6.1','PR - 7.1','PR - 8.1','PR - 9.1','PR - 10.1']}
-    
+
     footageToModels = {'44 ft\'s' : ['Armstrong','Bishop','Borgeua','Cline','Maclaren','Ptarmigan','Rutherford','Smythe','Bishop 2.0','Aberdeen','Rundle','Bluebell'],
                     '36 ft\'s' : ['Cypress','Fairview','Fullerton','Monarch','Whistler','Yamnuska','Norquay'],
                     '24 ft\'s' : ['Waputik','Palliser','Sundance','Finch','Cardinal','Starling']}
-    
+
     elevationDict = {
             "" : 0,
             "CL": 0,
@@ -57,7 +57,7 @@ class House:
             except Exception as e:
                 print("Caught Error:",e)
             
-    ##Effects: Returns an array of neighborhood, block, lot for this house
+    ##Effects: Returns a tuple of house identifiers (neighborhood, block, lot)
     def getID(self):
         temp = []
         temp.append(self.neighborhood)
@@ -65,23 +65,23 @@ class House:
         temp.append(self.lot)
         return temp
     
-    ##Effects: Appends the house to the end of the across list
+    ##Effects: Appends the house identifier to the end of the across list
     def insertAcross(self,house):
         self.across.append(house)
 
-    ##Effects: Appends the house to the end of the left list
-    ##         Order of insertions matters
+    ##Effects: Appends the house identifier to the end of the left list
+    ##         Order of insertions matters, list should be size 2
     def insertLeft(self,house,position):
         if (position >=0 and position <= 2):
             self.left[position] = house
 
-    ##Effects: Appends the house to the end of the right list
-    ##         Order of insertions matters
+    ##Effects: Appends the house identifier to the end of the right list
+    ##         Order of insertions matters, list should be size 2
     def insertRight(self,house,position):
         if (position >=0 and position <= 2):
             self.right[position] = house
 
-    ##Effects: Appends the house to the end of the corner list
+    ##Effects: Appends the house identifier to the end of the corner list
     def insertCorner(self,house):
         self.corner.append(house)
 
@@ -440,6 +440,8 @@ class House:
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
   
+    ##Effects: Queries the database and returns the model of the house with the provided identifier
+    ##         If the house does not exist returns ""
     def getModel(self,neighborhood,block,lot):
         result = selectSingle(neighborhood,block,lot,House.connection)
         if (len(result) == 0):
@@ -451,7 +453,9 @@ class House:
      ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
-
+ 
+    ##Effects: Queries the database and returns the elevation of the house with the provided identifier
+    ##         If the house does not exist returns ""
     def getElevation(self,neighborhood,block,lot):
         result = selectSingle(neighborhood,block,lot,House.connection)
         if (len(result) == 0):
