@@ -4,8 +4,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..',)))
 
 from flask import Flask, request, render_template, redirect, url_for, jsonify
 from Backend.Connection.connection import getConnection
-from Backend.Queries.query import selectSingle
-from Backend.Queries.query import selectAll
+from Backend.Queries.read import selectSingle
+from Backend.Queries.read import selectAll
 from Backend.Queries.update import update
 from Backend.Queries.delete import delete
 from Backend.Queries.create import create
@@ -30,9 +30,6 @@ def houses():
         message = create(neighborhood,block,lot,conn)
         return f"House with id: {message} was created!"
     
-
-
-
 @app.route('/house/<string:neighborhood>/<int:block>/<int:lot>', methods=['GET','PUT','DELETE'])
 def singleHouse(neighborhood,block,lot):
     if (request.method == 'GET'):

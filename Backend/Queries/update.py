@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from Backend.Connection.connection import getConnection
-from Backend.Queries.query import selectSingle
+from Backend.Queries.read import selectSingle
 
 ##Effects: Updates the house with neighborhood, block, lot with the given model, elevation, color
 ##TODO     If model elevation or colors is not given, then do not update that value

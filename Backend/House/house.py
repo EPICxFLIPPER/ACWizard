@@ -8,6 +8,8 @@ sys.path.append(parent_dir)
 
 from House.exceptions import *
 from Queries.query import *
+from Queries.read import selectSingle
+from Queries.read import selectBlock
 from Connection.connection import getConnection
 from Threads.retThread import RetThread
 

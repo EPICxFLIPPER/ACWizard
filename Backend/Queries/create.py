@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from Backend.Connection.connection import getConnection
-from Backend.Queries.query import selectSingle
+from Backend.Queries.read import selectSingle
 
 ##Effects: Creats a new house with the given neigborhood, block and lot
 def create(neighborhood, block, lot, connection):
