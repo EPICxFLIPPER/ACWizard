@@ -11,7 +11,7 @@ from Queries.read import selectSingle
 from Queries.read import selectBlock
 from Connection.connection import getConnection
 from Threads.retThread import RetThread
-
+import json
 ## A House object with realtional information to the the houses around it, and methods to handle arcitectrual controls
 class House:
 
@@ -480,12 +480,64 @@ class House:
     def getBlockSize(self,neighborhood,block):
         return blockSize(neighborhood,block,House.connection)[0][0]
 
+    def toDict(self):
+        return {
+            'neighborhood': self.neighborhood,
+            'block': self.block,
+            'lot': self.lot,
+            'across': self.across,
+            'left': self.left,
+            'right': self.right,
+            'corner': self.corner,
+            'pair': self.pair,
+        }
+    @classmethod
+    def fromDict(cls,data):
+        return cls(data['neighborhood'],data['block'],data['lot'],data['across'],data['left'],data['right'],data['corner'],data['pair'])
 
+# n = "TestNode"
+# oneOne = (n,1,1)
+# twoOne = (n,2,1)
+# twoTwo = (n,2,2)
+# twoThree = (n,2,3)
+# twoFour = (n,2,4)
+# threeOne = (n,3,1)
+# fourOne = (n,4,1)
+# fourTwo = (n,4,2)
+# fourThree = (n,4,3)
+# fourFour = (n,4,4)
+# fourFive = (n,4,5)
+# fourSix = (n,4,6)
 
+# ## (self,neighborhood,block,lot,across,left,right,corner,pair):
 
+# oneOneH = House(n,1,1,[],[None,None],[None,None],[twoOne,threeOne,fourOne],[])
+# twoOneH = House(n,2,1,[fourTwo],[None,None],[twoTwo,twoThree],[oneOne,threeOne,fourOne],[])
+# twoTwoH = House(n,2,2,[fourOne,fourTwo,fourThree],[None,twoOne],[twoThree,twoFour],[],[])
+# twoThreeH = House(n,2,3,[fourTwo,fourThree,fourFour],[twoOne,twoTwo],[twoFour,None],[],[])
+# twoFourH = House(n,2,4,[fourThree,fourFour,fourFive],[twoTwo,twoThree],[None,None],[],[])
+# threeOneH = House(n,3,1,[],[None,None],[None,None],[oneOne,twoOne,fourOne],[])
+# fourOneH = House(n,4,1,[twoTwo],[None,None],[fourTwo,fourThree],[oneOne,twoOne,threeOne],[])
+# fourTwoH = House(n,4,2,[twoOne,twoTwo,twoThree],[None,fourOne],[fourThree,fourFour],[],[])
+# fourThreeH = House(n,4,3,[twoTwo,twoThree,twoFour],[fourOne,fourTwo],[fourFour,fourFive],[],[])
+# fourFourH = House(n,4,4,[twoThree,twoFour],[fourTwo,fourThree],[fourFive,fourSix],[],[])
+# fourFiveH = House(n,4,5,[twoFour],[fourThree,fourFour],[fourSix,None],[],[])
+# fourSixH = House(n,4,6,[],[fourFour,fourFive],[None,None],[],[])
 
+# houses = [oneOneH,twoOneH,twoTwoH,twoThreeH,twoFourH,threeOneH,fourOneH,fourTwoH,fourThreeH,fourFourH,fourFiveH,fourSixH]
 
+# dictionaires = [h.toDict() for h in houses]
 
+# json_data = json.dumps(dictionaires)
+# print(json_data)
+# with open('../Data/houses.json', 'w') as file:
+#     file.write(json_data)
 
+with open('../Data/houses.json', 'r') as file:
+    data = json.load(file)
 
-    
+print(data)
+
+for d in data:
+    ret = House.fromDict(d)
+    print(ret.neighborhood)
