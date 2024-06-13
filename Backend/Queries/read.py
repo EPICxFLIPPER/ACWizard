@@ -4,6 +4,7 @@ import os
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
 sys.path.append(parent_dir)
 from Connection.connection import getConnection
+from Queries.format import format
 
 
 ##Effects: Selects all from Houses table
@@ -33,7 +34,9 @@ def selectSingle(neighborhood, block, lot,connection):
         cursor.execute(query, {'neighborhood':neighborhood,'lot': lot, 'block': block})
         results = cursor.fetchall()
         cursor.close()
-        return results
+        formatedResults = format(results)
+        print(formatedResults)
+        return formatedResults
     except Exception as e:
         print("Error:", e)
 

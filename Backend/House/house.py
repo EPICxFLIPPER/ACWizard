@@ -433,7 +433,7 @@ class House:
         if (len(result) == 0):
             return ""
         else:
-            return result[0][7]
+            return result[0]['extcolour']
         
         
      ##Effects: Queries the database and retruns the color of the house with 
@@ -447,7 +447,7 @@ class House:
         if (len(result) == 0):
             return ""
         else:
-            return result[0][5]
+            return result[0]['model']
 
 
      ##Effects: Queries the database and retruns the color of the house with 
@@ -461,7 +461,7 @@ class House:
         if (len(result) == 0):
             return ""
         else:
-            return result[0][6]
+            return result[0]['elevation']
     
     ##Effects: Returns the footage value fo the given house
     def getFootage(self,neighborhood,block,lot):
@@ -469,7 +469,7 @@ class House:
         if (len(result) == 0):
             return ""
         else:
-            return result[0][9]
+            return result[0]['footage']
         
     ##Effects: Returns an array of all the models and elevation pairs for houses on
     ##         the given neighborhood and block
