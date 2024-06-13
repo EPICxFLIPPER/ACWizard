@@ -51,3 +51,4 @@ def selectBlock(neighborhood,block,connection):
         print("Error:", e)
     finally:
         cursor.close()
+

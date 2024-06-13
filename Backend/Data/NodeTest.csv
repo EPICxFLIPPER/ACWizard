@@ -1,0 +1,13 @@
+Lot Job,Type Description,Phase,Block,Lot,Model,Elevation,Ext Colour
+1,TestNode - 44 ft's,1,1,1,Cline,CL,CL - 9.1
+2,TestNode - 44 ft's,1,2,1,Maclaren,PR,
+3,TestNode - 44 ft's,1,2,2,,CR,
+4,TestNode - 44 ft's,1,2,3,,CR,
+5,TestNode - 44 ft's,1,2,4,,,
+6,TestNode - 44 ft's,1,3,1,Armstrong,PR,PR - 1.1
+7,TestNode - 44 ft's,1,4,1,,PR,PR - 2.1
+8,TestNode - 44 ft's,1,4,2,Cline,CL,
+9,TestNode - 44 ft's,1,4,3,Bishop,CL,CL - 3.1
+10,TestNode - 44 ft's,1,4,4,,CL,
+11,TestNode - 44 ft's,1,4,5,,,
+12,TestNode - 44 ft's,1,4,6,,,

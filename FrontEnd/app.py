@@ -15,7 +15,7 @@ conn = getConnection()
 
 @app.route('/')
 def home():
-    return render_template('index.html', message="Hello, Flask!")
+    return render_template('home.html', message="Hello, Flask!")
 
 
 @app.route('/house', methods = ['GET','POST'])
@@ -34,7 +34,7 @@ def houses():
 def singleHouse(neighborhood,block,lot):
     if (request.method == 'GET'):
         result = selectSingle(neighborhood,block,lot,conn)
-        return jsonify(result)
+        return render_template("home.html", results=(result))
     elif (request.method == 'PUT'):
         model = request.form['model']
         elevation = request.form['elevation']
