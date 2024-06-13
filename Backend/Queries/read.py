@@ -46,7 +46,7 @@ def selectBlock(neighborhood,block,connection):
         query = 'SELECT * FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})
         results = cursor.fetchall()
-        return results
+        return format(results)
     except Exception as e:
         print("Error:", e)
     finally:
