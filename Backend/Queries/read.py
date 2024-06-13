@@ -20,7 +20,7 @@ def selectAll():
         cursor.close()
         connection.close()
         
-        return results
+        return format(results)
 
     except Exception as e:
         print("Error:", e)
@@ -35,7 +35,6 @@ def selectSingle(neighborhood, block, lot,connection):
         results = cursor.fetchall()
         cursor.close()
         formatedResults = format(results)
-        print(formatedResults)
         return formatedResults
     except Exception as e:
         print("Error:", e)
