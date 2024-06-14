@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..',)))
 
 from flask import Flask, request, render_template, redirect, url_for, jsonify
@@ -9,9 +10,38 @@ from Backend.Queries.read import selectAll
 from Backend.Queries.update import update
 from Backend.Queries.delete import delete
 from Backend.Queries.create import create
+from Backend.House.house import House
 
 app = Flask(__name__)
 conn = getConnection()
+housesDict = {}
+
+##Effects: popultates the housesDict with all of the houses in the houses.json file
+def createHouses():
+    with open('../Backend/Data/houses.json', 'r') as file:
+        data = json.load(file)
+
+    for d in data:
+        house = House.fromDict(d)
+        neighborhood = house.neighborhood
+        block = house.block
+        lot = house.lot
+
+        if neighborhood not in housesDict:
+            housesDict[neighborhood] = {}
+        if block not in housesDict[neighborhood]:
+            housesDict[neighborhood][block] = {}
+        
+        housesDict[neighborhood][block][lot] = house
+
+##Effects: itterate thorough all of the houses
+def itterateHouseDict():
+    print(housesDict)
+    for neighborhood, blocks in housesDict.items():
+        for block, lots in blocks.items():
+            for lot, house in lots.items():
+                print(f"Neighborhood: {neighborhood}, Block: {block}, Lot: {lot}")
+                print(house.toDict())
 
 @app.route('/')
 def home():
@@ -57,4 +87,5 @@ def singleHouse(neighborhood,block,lot):
     
 
 if __name__ == '__main__':
+    createHouses()
     app.run(debug=True)

@@ -533,11 +533,11 @@ class House:
 # with open('../Data/houses.json', 'w') as file:
 #     file.write(json_data)
 
-with open('../Data/houses.json', 'r') as file:
-    data = json.load(file)
+# with open('../Data/houses.json', 'r') as file:
+#     data = json.load(file)
 
-print(data)
+# print(data)
 
-for d in data:
-    ret = House.fromDict(d)
-    print(ret.neighborhood)
+# for d in data:
+#     ret = House.fromDict(d)
+#     print(ret.neighborhood)
