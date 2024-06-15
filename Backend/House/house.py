@@ -352,8 +352,9 @@ class House:
             houseBlock = selectBlock(house.neighborhood,house.block,House.connection)
             # loops through houses on the block
             for neighbour in houseBlock:
-                elevation = neighbour[6]
-                model = neighbour[5]
+                print("neighborr:", neighbour)
+                elevation = neighbour['elevation']
+                model = neighbour['model']
                 # increment elevation count of block
                 if model is not None:
                     if model == houseModel:
