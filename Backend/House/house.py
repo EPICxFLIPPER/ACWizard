@@ -88,9 +88,12 @@ class House:
     ##Effects: Returns a list of all colours this house can be,
     ##         If this house does not yet have a elevation, returns []
     ##         If this house does not have a vailid elevation, throws invalid elevation exception
-    def colours(self):
+    def colours(self,tempElevation = None):
         id = self.getID()
-        elevation = self.getElevation(id[0],id[1],id[2])
+        if (tempElevation is not None):
+            elevation = tempElevation
+        else:
+            elevation = self.getElevation(id[0],id[1],id[2])
         if (elevation == "PR" or elevation == "CR" or elevation == "CL"):
             return self.getColorsForElevation(copy.deepcopy(self.elevationToColorDict[elevation]))
         elif (elevation is None or elevation == " " or elevation == ""):
@@ -137,18 +140,21 @@ class House:
         return possibleColors
         
     ##Effects: Returns a list of all models this house can be, Throws InvalidFootageException if this house does not have valid Footage
-    def models(self):
+    def models(self,tempElevation = None):
         id = self.getID()
         footage = self.getFootage(id[0],id[1],id[2])
         if (footage == '44 ft\'s' or footage ==  '36 ft\'s' or footage ==  '24 ft\'s'):
-            return self.modelsForSize(copy.deepcopy(self.footageToModels[footage]))
+            return self.modelsForSize(copy.deepcopy(self.footageToModels[footage]), tempElevation)
         else:
             raise InvalidFootageException(footage)
 
     ##Effects: Returns all the models that this house can be by elimatating models from the possible starting models.    
-    def modelsForSize(self,possibleModels):
+    def modelsForSize(self,possibleModels,tempElevation):
         id = self.getID()
-        elevation = self.getElevation(id[0],id[1],id[2])
+        if (tempElevation is not None):
+            elevation = tempElevation
+        else:
+            elevation = self.getElevation(id[0],id[1],id[2])
 
         if (elevation != None and elevation != " " and elevation != ""):
             ##This house does have en elevation
