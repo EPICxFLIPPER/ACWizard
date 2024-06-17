@@ -122,6 +122,12 @@ def test_ElevationConers3Corners():
     opp = House(n,100,1,[],[],[],corn,[])
     assert opp.elevations() == []
 
+## Tests the 3 corner case but non of the elevations should be elimanated
+def test_ElevationCorners3NoElim():
+    corn = [(n,100,4),(n,100,3),(n,100,2)]
+    opp = House(n,100,5,[],[],[],corn,[])
+    assert sorted(opp.elevations()) == sorted(["CL", "CR", "PR"])
+
 
 # Tests the case where 3 houses across from current house and two share the same elevation
 def test_ColourAcrossTwoCR():

@@ -279,20 +279,25 @@ class House:
         lock = threading.Lock()
 
         def checkCorner(tempModel = None):
-            threads = []
-            for cornerHouse in house.corner:
-                t = RetThread(target=house.getElevation,args=(cornerHouse[0], cornerHouse[1], cornerHouse[2]))
-                t.start()
-                threads.append(t)
+            curHouse = house.getID()
 
-            for t in threads:
-                cornerHouseElevation = t.join()
-                lock.acquire()
-                if (cornerHouseElevation is not None and cornerHouseElevation in elevationList):
-                    elevationList.remove(cornerHouseElevation)
-                lock.release()
+            if (tempModel is not None):
+                houseModel = tempModel
+            else:
+                houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
+            
+            if (houseModel is not None and houseModel != ""):
+                for cornerHouse in house.corner:
+                    cornerHouseElevation = house.getElevation(cornerHouse[0], cornerHouse[1], cornerHouse[2])
+                    cornerHouseModel = house.getModel(cornerHouse[0], cornerHouse[1], cornerHouse[2])
+                    lock.acquire()
+                    if (cornerHouseElevation is not None and cornerHouseElevation in elevationList and cornerHouseModel == houseModel):
+                        elevationList.remove(cornerHouseElevation)
+                    lock.release()
 
-        ##TODO make threaded
+                
+
+        
         def alternatingElevation(tempModel = None):
             # get characteristics of left house
             if len(house.left) == 0:
