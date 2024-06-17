@@ -54,6 +54,7 @@ def houses():
         result = selectAll()
         return jsonify(result)
     elif (request.method == 'POST'):
+        print(request.form)
         neighborhood = request.form['neighborhood']
         block = request.form['block']
         lot = request.form['lot']

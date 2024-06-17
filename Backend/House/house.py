@@ -274,11 +274,11 @@ class House:
         return notModels
             
     ##Effects: Returns a list of all elevations this house can be
-    def elevations(house):
+    def elevations(house, tempModel = None):
         elevationList = ["CR","PR","CL"]
         lock = threading.Lock()
 
-        def checkCorner():
+        def checkCorner(tempModel = None):
             threads = []
             for cornerHouse in house.corner:
                 t = RetThread(target=house.getElevation,args=(cornerHouse[0], cornerHouse[1], cornerHouse[2]))
@@ -293,7 +293,7 @@ class House:
                 lock.release()
 
         ##TODO make threaded
-        def alternatingElevation():
+        def alternatingElevation(tempModel = None):
             # get characteristics of left house
             if len(house.left) == 0:
                 leftHouseModel = ""
@@ -318,7 +318,11 @@ class House:
 
             # get characteristics of current house
             curHouse = house.getID()
-            houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
+
+            if (tempModel is not None):
+                houseModel = tempModel
+            else:
+                houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
 
             # if the model is the same, elevation must be alternating
             if houseModel is not None:
@@ -351,10 +355,13 @@ class House:
                         elevationList.remove(neighbourElevation)
                     lock.release()
 
-        def maxThree():
+        def maxThree(tempModel = None):
             possibleElevations = house.elevationDict
             houseArray = house.getID()
-            houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
+            if (tempModel is not None):
+                houseModel = tempModel
+            else:
+                houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
             houseBlock = selectBlock(house.neighborhood,house.block,House.connection)
             # loops through houses on the block
             for neighbour in houseBlock:
@@ -375,10 +382,13 @@ class House:
                 # reset counts
                 possibleElevations[elevation] = 0
 
-        def twoApart():
+        def twoApart(tempModel = None):
             possibleElevations = house.elevationDict
             houseArray = house.getID()
-            houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
+            if (tempModel is not None):
+                houseModel = tempModel
+            else:
+                houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
             houseElevation = house.getElevation(houseArray[0], houseArray[1], houseArray[2])
 
             # loop through left Neighbours
@@ -412,13 +422,20 @@ class House:
                 possibleElevations[elevation] = 0
 
             # return list of valid elevations
-
-        threads = [
-            RetThread(target=twoApart),
-            RetThread(target=maxThree),
-            RetThread(target=acrossElevation),
-            RetThread(target=alternatingElevation),
-            RetThread(target=checkCorner) ]
+        if (tempModel is not None):
+            threads = [
+                RetThread(target=twoApart, args=(tempModel)),
+                RetThread(target=maxThree, args=(tempModel)),
+                RetThread(target=acrossElevation),
+                RetThread(target=alternatingElevation, args=(tempModel)),
+                RetThread(target=checkCorner, args=(tempModel)) ]
+        else:
+            threads = [
+                RetThread(target=twoApart),
+                RetThread(target=maxThree),
+                RetThread(target=acrossElevation),
+                RetThread(target=alternatingElevation),
+                RetThread(target=checkCorner) ]
         
         for t in threads:
             t.start()
