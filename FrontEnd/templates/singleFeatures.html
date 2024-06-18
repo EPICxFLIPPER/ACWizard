@@ -19,6 +19,26 @@
             window.location.href = url;
         }
     </script>
+    <script>
+        function submitFormElevation(event) {
+            event.preventDefault();
+            const neighborhood = document.getElementById('neighborhood').value;
+            const block = document.getElementById('block').value;
+            const lot = document.getElementById('lot').value;
+            const url = `/house/elevation/${neighborhood}/${block}/${lot}`;
+            window.location.href = url;
+        }
+    </script>
+    <script>
+        function submitFormColour(event) {
+            event.preventDefault();
+            const neighborhood = document.getElementById('neighborhood').value;
+            const block = document.getElementById('block').value;
+            const lot = document.getElementById('lot').value;
+            const url = `/house/colour/${neighborhood}/${block}/${lot}`;
+            window.location.href = url;
+        }
+    </script>
 </head> 
 <body>
     <h1>Input a House</h1>
@@ -41,6 +61,26 @@
             <ul>
                 {% for model in models %}
                     <li>{{ model }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div id="elevations">
+        {% if elevations %}
+            <h2>Elevations:</h2>
+            <ul>
+                {% for elevation in elevations %}
+                    <li>{{ elevation }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div id="colours">
+        {% if colours %}
+            <h2>Colours:</h2>
+            <ul>
+                {% for colour in colours %}
+                    <li>{{ colour }}</li>
                 {% endfor %}
             </ul>
         {% endif %}

@@ -98,12 +98,16 @@ def singleHouseModels(neighborhood,block,lot):
     return render_template("singleFeatures.html", models = (modelsList))
 
 @app.route('/house/elevation/<string:neighborhood>/<int:block>/<int:lot>')
-def singleHouseElevations():
-    print("stub")
+def singleHouseElevations(neighborhood,block,lot):
+    houseNode = housesDict[neighborhood][block][lot]
+    elevationsList = houseNode.elevations()
+    return render_template("singleFeatures.html", models = (elevationsList))
  
 @app.route('/house/colour/<string:neighborhood>/<int:block>/<int:lot>')
-def singleHouseColours():
-    print("stub")
+def singleHouseColours(neighborhood,block,lot):
+    houseNode = housesDict[neighborhood][block][lot]
+    elevationsList = houseNode.colours()
+    return render_template("singleFeatures.html", models = (elevationsList))
 
 if __name__ == '__main__':
     createHouses()
