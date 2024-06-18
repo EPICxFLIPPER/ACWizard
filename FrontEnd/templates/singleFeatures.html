@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>House Search</title>
+    <title>Single House Feature Search</title>
     <script>
-        function submitForm(event) {
+        function goToHome() {
+            window.location.href = '/'
+        }
+    </script>
+    <script>
+        function submitFormModel(event) {
             event.preventDefault();
             const neighborhood = document.getElementById('neighborhood').value;
             const block = document.getElementById('block').value;
             const lot = document.getElementById('lot').value;
-            const url = `/house/${neighborhood}/${block}/${lot}`;
+            const url = `/house/model/${neighborhood}/${block}/${lot}`;
             window.location.href = url;
         }
     </script>
-    <script>
-        function goToSingleFeatures() {
-            window.location.href = '/singleFeatures'
-        }
-    </script>
-</head>
+</head> 
 <body>
-    <h1>Search for a House</h1>
+    <h1>Input a House</h1>
     <form onsubmit="submitForm(event)">
         <label for="neighborhood">Neighborhood:</label>
         <input type="text" id="neighborhood" name="neighborhood"><br><br>
@@ -29,17 +29,18 @@
         <input type="text" id="block" name="block"><br><br>
         <label for="lot">Lot:</label>
         <input type="text" id="lot" name="lot"><br><br>
-        <input type="submit" value="Search">
+        <button type="button" onclick="submitFormModel(event)">Action Model</button>
+        <button type="button" onclick="submitFormElevation(event)">Action Elevation</button>
+        <button type="button" onclick="submitFormColour(event)">Action Colour</button>
     </form>
-
-    <button onclick="goToSingleFeatures()">Go to single features</button>
-
-    <div id="results">
-        {% if results %}
-            <h2>Search Results</h2>
+    <button onclick="goToHome()">Return Home</button>
+    <h2>Search Results:</h2>
+    <div id="models">
+        {% if models %}
+            <h2>Models:</h2>
             <ul>
-                {% for house in results %}
-                    <li>Neighborhood: {{ house.neighborhood }}, Block: {{ house.block }}, Lot: {{ house.lot }}, Model: {{ house.model }}, Elevation: {{ house.elevation }}, Color: {{ house.extcolour }}</li>
+                {% for model in models %}
+                    <li>{{ model }}</li>
                 {% endfor %}
             </ul>
         {% endif %}

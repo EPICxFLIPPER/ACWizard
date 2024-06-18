@@ -51,8 +51,3 @@ def selectBlock(neighborhood,block,connection):
         print("Error:", e)
     finally:
         cursor.close()
-
-
-block = selectBlock("Ryan",100,getConnection())
-for b in block:
-    print(b)

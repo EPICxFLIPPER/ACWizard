@@ -86,6 +86,24 @@ def singleHouse(neighborhood,block,lot):
         delete(neighborhood,block,lot,conn)
         return jsonify({'message': 'House deleted successfully'}), 200
     
+@app.route('/singleFeatures')
+def singleFeautres(): 
+    return render_template('singleFeatures.html', message="Hello, Flask!")
+
+
+@app.route('/house/model/<string:neighborhood>/<int:block>/<int:lot>')
+def singleHouseModels(neighborhood,block,lot):
+    houseNode = housesDict[neighborhood][block][lot]
+    modelsList = houseNode.models()
+    return render_template("singleFeatures.html", models = (modelsList))
+
+@app.route('/house/elevation/<string:neighborhood>/<int:block>/<int:lot>')
+def singleHouseElevations():
+    print("stub")
+ 
+@app.route('/house/colour/<string:neighborhood>/<int:block>/<int:lot>')
+def singleHouseColours():
+    print("stub")
 
 if __name__ == '__main__':
     createHouses()

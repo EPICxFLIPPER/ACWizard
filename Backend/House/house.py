@@ -193,9 +193,6 @@ class House:
             for index in range(len(modelThreads)):
                 mod = modelThreads[index].join()
                 ele = elevationThreads[index].join()
-                print(mod)
-                print(ele)
-                print("here")
                 if (ele == elevation):
                     toRemove.append(mod)
 
