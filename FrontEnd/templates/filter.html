@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Input Form</title>
+    <script src="{{url_for('static', filename='filterScript.js')}}"></script>
+</head>
+<body>
+    <h1>Input a House</h1>
+    <form onsubmit="submitForm(event)">
+
+        <label for="footage">Footage:</label>
+        <select id="footage" name="footage">
+            <option value="44 ft">44 ft</option>
+            <option value="36 ft">36 ft</option>
+            <option value="24 ft">24 ft</option>
+        </select><br><br>
+
+        <label for="model">Model:</label>
+        <select id="model" name="model"></select><br><br>
+
+        <label for="elevation">Elevation:</label>
+        <select id="elevation" name="elevation"></select><br><br>
+
+        <label for="colour">Colour:</label>
+        <select id="colour" name="colour"></select><br><br>
+
+        <button type="button" onclick="submitFormModel(event)">Action Model</button>
+        <button type="button" onclick="submitFormElevation(event)">Action Elevation</button>
+        <button type="button" onclick="submitFormColour(event)">Action Colour</button>
+    </form>
+</body>
+</html>

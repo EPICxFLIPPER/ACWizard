@@ -119,7 +119,7 @@ def update_form():
     colour = request.args.get('colour')
 
     return render_template('update.html',neighborhood=neighborhood, block=block, lot=lot, model=model, elevation=elevation, colour=colour)
-
+   
 @app.route('/update', methods=['POST'])
 def update_house():
     neighborhood = request.form['neighborhood']
@@ -140,6 +140,10 @@ def update_house():
 @app.route('/success')
 def success():
     return "House updated successfully!"
+
+@app.route('/filter')
+def filter(): 
+    return render_template("filter.html")
 
 if __name__ == '__main__':
     createHouses()
