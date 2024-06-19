@@ -4,41 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Single House Feature Search</title>
-    <script>
-        function goToHome() {
-            window.location.href = '/'
-        }
-    </script>
-    <script>
-        function submitFormModel(event) {
-            event.preventDefault();
-            const neighborhood = document.getElementById('neighborhood').value;
-            const block = document.getElementById('block').value;
-            const lot = document.getElementById('lot').value;
-            const url = `/house/model/${neighborhood}/${block}/${lot}`;
-            window.location.href = url;
-        }
-    </script>
-    <script>
-        function submitFormElevation(event) {
-            event.preventDefault();
-            const neighborhood = document.getElementById('neighborhood').value;
-            const block = document.getElementById('block').value;
-            const lot = document.getElementById('lot').value;
-            const url = `/house/elevation/${neighborhood}/${block}/${lot}`;
-            window.location.href = url;
-        }
-    </script>
-    <script>
-        function submitFormColour(event) {
-            event.preventDefault();
-            const neighborhood = document.getElementById('neighborhood').value;
-            const block = document.getElementById('block').value;
-            const lot = document.getElementById('lot').value;
-            const url = `/house/colour/${neighborhood}/${block}/${lot}`;
-            window.location.href = url;
-        }
-    </script>
+    <script src="{{url_for('static', filename='singleFeaturesScript.js')}}"></script>
 </head> 
 <body>
     <h1>Input a House</h1>

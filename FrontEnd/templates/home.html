@@ -4,21 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>House Search</title>
-    <script>
-        function submitForm(event) {
-            event.preventDefault();
-            const neighborhood = document.getElementById('neighborhood').value;
-            const block = document.getElementById('block').value;
-            const lot = document.getElementById('lot').value;
-            const url = `/house/${neighborhood}/${block}/${lot}`;
-            window.location.href = url;
-        }
-    </script>
-    <script>
-        function goToSingleFeatures() {
-            window.location.href = '/singleFeatures'
-        }
-    </script>
+    <script src="{{url_for('static', filename='homeScript.js')}}"></script>
 </head>
 <body>
     <h1>Search for a House</h1>
@@ -40,6 +26,7 @@
             <ul>
                 {% for house in results %}
                     <li>Neighborhood: {{ house.neighborhood }}, Block: {{ house.block }}, Lot: {{ house.lot }}, Model: {{ house.model }}, Elevation: {{ house.elevation }}, Color: {{ house.extcolour }}</li>
+                    <button onclick="goToUpdatePage('{{house.neighborhood}}','{{house.block}}','{{house.lot}}','{{house.model}}','{{house.elevation}}','{{house.extcolour}}')">Edit House</button>
                 {% endfor %}
             </ul>
         {% endif %}

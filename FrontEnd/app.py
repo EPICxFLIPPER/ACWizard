@@ -109,6 +109,38 @@ def singleHouseColours(neighborhood,block,lot):
     elevationsList = houseNode.colours()
     return render_template("singleFeatures.html", models = (elevationsList))
 
+@app.route('/update', methods=['GET'])
+def update_form():
+    neighborhood = request.args.get('neighborhood')
+    block = request.args.get('block')
+    lot = request.args.get('lot')
+    model = request.args.get('model')
+    elevation = request.args.get('elevation')
+    colour = request.args.get('colour')
+
+    return render_template('update.html',neighborhood=neighborhood, block=block, lot=lot, model=model, elevation=elevation, colour=colour)
+
+@app.route('/update', methods=['POST'])
+def update_house():
+    neighborhood = request.form['neighborhood']
+    block = request.form['block']
+    model = request.form['model']
+    lot = request.form['lot']
+    elevation = request.form['elevation']
+    colour = request.form['colour']
+
+    connection = getConnection()
+    try:
+        update(neighborhood, block, lot, model, elevation, colour, connection)
+    finally:
+        connection.close()
+
+    return redirect(url_for('success'))
+
+@app.route('/success')
+def success():
+    return "House updated successfully!"
+
 if __name__ == '__main__':
     createHouses()
     app.run(debug=True)

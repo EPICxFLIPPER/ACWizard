@@ -6,13 +6,19 @@
 </head>
 <body>
     <h1>Update House</h1>
-    <form method="post" action="{{ url_for('handle_update_form', neighborhood=neighborhood, block=block, lot=lot) }}">
+    <form action="{{url_for('update_house') }}" method="POST">
+        <label for="neighborhood">Neighborhood:</label>
+        <input type="text" id="neighborhood" name="neighborhood" value="{{ neighborhood }}" readonly><br><br>
+        <label for="block">Block:</label>
+        <input type="text" id="block" name="block" value="{{ block }}" readonly><br><br>
+        <label for="lot">Lot:</label>
+        <input type="text" id="lot" name="lot" value="{{ lot }}" readonly><br><br>
         <label>Model:</label>
-        <input type="text" name="model" value="{{ house[0] }}"><br>
+        <input type="text" name="model" value="{{ model }}"><br>
         <label>Elevation:</label>
-        <input type="text" name="elevation" value="{{ house[1] }}"><br>
+        <input type="text" name="elevation" value="{{ elevation }}"><br>
         <label>Color:</label>
-        <input type="text" name="color" value="{{ house[2] }}"><br>
+        <input type="text" name="colour" value="{{ colour }}"><br>
         <input type="submit" value="Update">
     </form>
 </body>
