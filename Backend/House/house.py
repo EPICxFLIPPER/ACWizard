@@ -207,7 +207,6 @@ class House:
                     toRemove.append(p[0])
 
             toRemove.extend(threeThread.join())
-            print(toRemove)
             for r in toRemove:
                 try:
                     possibleModels.remove(r)
@@ -278,19 +277,19 @@ class House:
         def checkCorner(tempModel = None):
             curHouse = house.getID()
 
-            if (tempModel is not None):
-                houseModel = tempModel
-            else:
-                houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
+            # if (tempModel is not None):
+            #     houseModel = tempModel
+            # else:
+            #     houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
             
-            if (houseModel is not None and houseModel != ""):
-                for cornerHouse in house.corner:
-                    cornerHouseElevation = house.getElevation(cornerHouse[0], cornerHouse[1], cornerHouse[2])
-                    cornerHouseModel = house.getModel(cornerHouse[0], cornerHouse[1], cornerHouse[2])
-                    lock.acquire()
-                    if (cornerHouseElevation is not None and cornerHouseElevation in elevationList and cornerHouseModel == houseModel):
-                        elevationList.remove(cornerHouseElevation)
-                    lock.release()
+            # if (houseModel is not None and houseModel != ""):
+            #     for cornerHouse in house.corner:
+            #         cornerHouseElevation = house.getElevation(cornerHouse[0], cornerHouse[1], cornerHouse[2])
+            #         cornerHouseModel = house.getModel(cornerHouse[0], cornerHouse[1], cornerHouse[2])
+            #         lock.acquire()
+            #         if (cornerHouseElevation is not None and cornerHouseElevation in elevationList and cornerHouseModel == houseModel):
+            #             elevationList.remove(cornerHouseElevation)
+            #         lock.release()
 
                 
 
@@ -384,6 +383,7 @@ class House:
                 # reset counts
                 possibleElevations[elevation] = 0
 
+        
         def twoApart(tempModel = None):
             possibleElevations = house.elevationDict
             houseArray = house.getID()
@@ -424,13 +424,20 @@ class House:
                 possibleElevations[elevation] = 0
 
             # return list of valid elevations
+        
+        print(tempModel, "Temp model in models is")
+        if (tempModel == ""):
+            print("empty")
+        if (tempModel == None):
+            print("none")
         if (tempModel is not None):
+            
             threads = [
-                RetThread(target=twoApart, args=(tempModel)),
-                RetThread(target=maxThree, args=(tempModel)),
+                RetThread(target=twoApart, args=(tempModel,)),
+                RetThread(target=maxThree, args=(tempModel,)),
                 RetThread(target=acrossElevation),
-                RetThread(target=alternatingElevation, args=(tempModel)),
-                RetThread(target=checkCorner, args=(tempModel)) ]
+                RetThread(target=alternatingElevation, args=(tempModel,)),
+                RetThread(target=checkCorner, args=(tempModel,)) ]
         else:
             threads = [
                 RetThread(target=twoApart),
@@ -520,6 +527,27 @@ class House:
     @classmethod
     def fromDict(cls,data):
         return cls(data['neighborhood'],data['block'],data['lot'],data['across'],data['left'],data['right'],data['corner'],data['pair'])
+    
+    ##Effects: Returns true if this house can be the given model elevation and colour
+    def canBeSpecifics(self,model,elevation,colour):
+        if (model == ""):
+            Newmodel = None
+        else:
+            Newmodel = model
+        if (elevation == ""):
+            Newelevation = None
+        else:
+            Newelevation = elevation
+
+        print(Newmodel, "The new model in can Be Specifics")
+        possibleModels = self.models(tempElevation=Newelevation)
+        possibleElevations = self.elevations(tempModel=Newmodel)
+        possibleColours = self.colours(tempElevation=Newelevation)
+
+        return ((model in possibleModels or model == "") and (elevation in possibleElevations or elevation == "") and (colour in possibleColours or colour == ""))
+
+
+
 
 # n = "TestNode"
 # oneOne = (n,1,1)

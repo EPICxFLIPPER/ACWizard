@@ -145,6 +145,23 @@ def success():
 def filter(): 
     return render_template("filter.html")
 
+@app.route('/house/filter/<string:model>/<string:elevation>/<string:colour>')
+def filterHouses(model,elevation,colour):
+    result = []
+    for neighborhood, blocks in housesDict.items():
+        for block, lots in blocks.items():
+            for lot, house in lots.items():
+                print("house")
+                if (house.canBeSpecifics(model,elevation,colour)):
+                    toAdd = {'neighborhood':neighborhood,
+                             'block': block,
+                             'lot':lot}
+                    result.append(toAdd)
+    
+
+    return render_template("filter.html", results=(result))
+                
+
 if __name__ == '__main__':
     createHouses()
     app.run(debug=True)

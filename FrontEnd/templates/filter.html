@@ -26,9 +26,18 @@
         <label for="colour">Colour:</label>
         <select id="colour" name="colour"></select><br><br>
 
-        <button type="button" onclick="submitFormModel(event)">Action Model</button>
-        <button type="button" onclick="submitFormElevation(event)">Action Elevation</button>
-        <button type="button" onclick="submitFormColour(event)">Action Colour</button>
+        <button type="button" onclick="search(event)">Search</button>
     </form>
+
+    <div id="results">
+        {% if results %}
+            <h2>Search Results</h2>
+            <ul>
+                {% for house in results %}
+                    <li>Neighborhood: {{ house.neighborhood }}, Block: {{ house.block }}, Lot: {{ house.lot }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 </body>
 </html>
