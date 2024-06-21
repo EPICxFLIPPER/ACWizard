@@ -15,8 +15,6 @@ def modelCountsBlockElevation(neighborhood, block,elevation,connection = None):
         query = 'SELECT Model, Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood AND Elevation = :elevation GROUP BY Model'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood, 'elevation' : elevation})
         results = cursor.fetchall()
-        print(results)
-        print(len(results))
         return results
     except Exception as e:
         print("Error:", e)
@@ -32,8 +30,6 @@ def blockSize(neighborhood, block,connection = None):
         query = 'SELECT Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})
         results = cursor.fetchall()
-        print(results)
-        print(len(results))
         return results
     except Exception as e:
         print("Error:", e)

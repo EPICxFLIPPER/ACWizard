@@ -13,7 +13,6 @@ import Connection.config
 def getConnection():
 
     connection_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    print(connection_dir)
 
     try:
         connection=oracledb.connect(
@@ -27,7 +26,7 @@ def getConnection():
     except Exception as err:
         print("Error connecting to DB", err)
     else:
-        print(connection.version)
+        print("Connected Sucessfully, version: ",connection.version)
         return connection
 
 

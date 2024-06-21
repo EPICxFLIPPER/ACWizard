@@ -43,6 +43,5 @@ function search(event) {
     const elevation = document.getElementById('elevation').value;
     const colour = document.getElementById('colour').value;
     const url = `/house/filter/${model}/${elevation}/${colour}`;
-    console.log(url)
     window.location.href = url;
 }

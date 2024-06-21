@@ -15,8 +15,7 @@ def selectAll():
         
         cursor.execute('SELECT * FROM Houses')
         results = cursor.fetchall()
-
-        print("Number of rows fetched:", len(results))
+        
         cursor.close()
         connection.close()
         

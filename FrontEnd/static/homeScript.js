@@ -11,6 +11,10 @@ function goToSingleFeatures() {
     window.location.href = '/singleFeatures'
 }
 
+function goToFilter() {
+    window.location.href = '/filter'
+}
+
 function goToUpdatePage(neighborhood,block,lot,model,elevation,colour) {
     const url = `/update?neighborhood=${encodeURIComponent(neighborhood)}&block=${encodeURIComponent(block)}&lot=${encodeURIComponent(lot)}&model=${encodeURIComponent(model)}&elevation=${encodeURIComponent(elevation)}&colour=${encodeURIComponent(colour)}`;
     window.location.href = url;

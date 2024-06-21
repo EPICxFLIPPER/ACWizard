@@ -39,13 +39,11 @@ def createHouses():
         housesDict[neighborhood][block][lot] = house
 
 ##Effects: itterate thorough all of the houses
-def itterateHouseDict():
-    print(housesDict)
+def itterateHouseDict(): 
     for neighborhood, blocks in housesDict.items():
         for block, lots in blocks.items():
             for lot, house in lots.items():
                 print(f"Neighborhood: {neighborhood}, Block: {block}, Lot: {lot}")
-                print(house.toDict())
 
 @app.route('/')
 def home():
@@ -58,7 +56,6 @@ def houses():
         result = selectAll()
         return jsonify(result)
     elif (request.method == 'POST'):
-        print(request.form)
         neighborhood = request.form['neighborhood']
         block = request.form['block']
         lot = request.form['lot']
@@ -151,32 +148,7 @@ def filter():
 
 @app.route('/house/filter/<string:model>/<string:elevation>/<string:colour>')
 def filterHouses(model,elevation,colour):
-    # start = time.time()
-    # lock = threading.Lock()
-    # result = []
-    # threads = []
-
-    # for neighborhood, blocks in housesDict.items():
-    #     for block, lots in blocks.items():
-    #         for lot, house in lots.items():
-    #             t = RetThread(target= House.canBeSpecifics, args=(house,neighborhood,block,lot,model,elevation,colour))
-    #             t.start()
-    #             threads.append(t)
-
-
-    # for t in threads:
-    #     valueBack = t.join()  
-    #     if (valueBack is not None):
-    #         lock.acquire()
-    #         result.append(valueBack)
-    #         lock.release()
     
-    # end = time.time()
-    # endtime = end - start
-    # print(endtime)
-
-    # return render_template("filter.html", results=(result))
-    start = time.time()
     manager = multiprocessing.Manager()
     result = manager.list()  # A list that can be shared between processes
 
@@ -195,10 +167,6 @@ def filterHouses(model,elevation,colour):
     
     for p in processes:
         p.join()
-    
-    end = time.time()
-    endtime = end - start
-    print(endtime)
     
     return render_template("filter.html", results=result)
                 

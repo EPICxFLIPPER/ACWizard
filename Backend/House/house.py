@@ -371,7 +371,6 @@ class House:
             houseBlock = selectBlock(house.neighborhood,house.block,connection)
             # loops through houses on the block
             for neighbour in houseBlock:
-                print("neighborr:", neighbour)
                 elevation = neighbour['elevation']
                 model = neighbour['model']
                 # increment elevation count of block
@@ -429,12 +428,7 @@ class House:
                 possibleElevations[elevation] = 0
 
             # return list of valid elevations
-        
-        print(tempModel, "Temp model in models is")
-        if (tempModel == ""):
-            print("empty")
-        if (tempModel == None):
-            print("none")
+    
         if (tempModel is not None):
             
             threads = [
@@ -545,7 +539,6 @@ class House:
         else:
             Newelevation = elevation
 
-        print(Newmodel, "The new model in can Be Specifics")
         possibleModels = self.models(tempElevation=Newelevation,connection = conn)
         possibleElevations = self.elevations(tempModel=Newmodel,connection = conn)
         possibleColours = self.colours(tempElevation=Newelevation,connection = conn)
