@@ -27,8 +27,10 @@ def selectAll():
 
 
 ##Effects: Queris the single house based on its neighborhood block and lot numbers
-def selectSingle(neighborhood, block, lot,connection):
+def selectSingle(neighborhood, block, lot,connection = None):
     try:
+        if (connection is None):
+            connection = getConnection()
         cursor = connection.cursor()
         query = 'SELECT * FROM Houses WHERE Neighborhood = :neighborhood AND Lot = :lot AND Block = :block'
         cursor.execute(query, {'neighborhood':neighborhood,'lot': lot, 'block': block})
@@ -40,8 +42,10 @@ def selectSingle(neighborhood, block, lot,connection):
         print("Error:", e)
 
 ##Effects: Queries all the hosues on a specific block 
-def selectBlock(neighborhood,block,connection):
+def selectBlock(neighborhood,block,connection = None):
     try:
+        if (connection is None):
+            connection = getConnection()
         cursor = connection.cursor()
         query = 'SELECT * FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})

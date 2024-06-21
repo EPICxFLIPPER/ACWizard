@@ -7,8 +7,10 @@ from Connection.connection import getConnection
 
         
 ##Effects: Queries the database and retuns the counts of each model for a specific block and elevation
-def modelCountsBlockElevation(neighborhood, block,elevation,connection):
+def modelCountsBlockElevation(neighborhood, block,elevation,connection = None):
     try:
+        if (connection is None):
+            connection = getConnection()
         cursor = connection.cursor()
         query = 'SELECT Model, Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood AND Elevation = :elevation GROUP BY Model'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood, 'elevation' : elevation})
@@ -22,8 +24,10 @@ def modelCountsBlockElevation(neighborhood, block,elevation,connection):
         cursor.close()
 
 ##Effects: Queries the database and retuns the size of the specific block in the neigbohood
-def blockSize(neighborhood, block,connection):
+def blockSize(neighborhood, block,connection = None):
     try:
+        if (connection is None):
+            connection = getConnection()
         cursor = connection.cursor()
         query = 'SELECT Count(*) FROM Houses WHERE Block = :block AND Neighborhood = :neighborhood'
         cursor.execute(query, {'block': block, 'neighborhood' : neighborhood})

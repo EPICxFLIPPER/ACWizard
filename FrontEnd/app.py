@@ -11,6 +11,10 @@ from Backend.Queries.update import update
 from Backend.Queries.delete import delete
 from Backend.Queries.create import create
 from Backend.House.house import House
+from Backend.Threads.retThread import *
+import time
+import threading
+import multiprocessing
 
 app = Flask(__name__)
 conn = getConnection()
@@ -147,19 +151,56 @@ def filter():
 
 @app.route('/house/filter/<string:model>/<string:elevation>/<string:colour>')
 def filterHouses(model,elevation,colour):
-    result = []
+    # start = time.time()
+    # lock = threading.Lock()
+    # result = []
+    # threads = []
+
+    # for neighborhood, blocks in housesDict.items():
+    #     for block, lots in blocks.items():
+    #         for lot, house in lots.items():
+    #             t = RetThread(target= House.canBeSpecifics, args=(house,neighborhood,block,lot,model,elevation,colour))
+    #             t.start()
+    #             threads.append(t)
+
+
+    # for t in threads:
+    #     valueBack = t.join()  
+    #     if (valueBack is not None):
+    #         lock.acquire()
+    #         result.append(valueBack)
+    #         lock.release()
+    
+    # end = time.time()
+    # endtime = end - start
+    # print(endtime)
+
+    # return render_template("filter.html", results=(result))
+    start = time.time()
+    manager = multiprocessing.Manager()
+    result = manager.list()  # A list that can be shared between processes
+
+    def process_house(house, neighborhood, block, lot):
+        valueBack = House.canBeSpecifics(house, neighborhood, block, lot, model, elevation, colour)
+        if valueBack is not None:
+            result.append(valueBack)
+
+    processes = []
     for neighborhood, blocks in housesDict.items():
         for block, lots in blocks.items():
             for lot, house in lots.items():
-                print("house")
-                if (house.canBeSpecifics(model,elevation,colour)):
-                    toAdd = {'neighborhood':neighborhood,
-                             'block': block,
-                             'lot':lot}
-                    result.append(toAdd)
+                p = multiprocessing.Process(target=process_house, args=(house, neighborhood, block, lot))
+                p.start()
+                processes.append(p)
     
-
-    return render_template("filter.html", results=(result))
+    for p in processes:
+        p.join()
+    
+    end = time.time()
+    endtime = end - start
+    print(endtime)
+    
+    return render_template("filter.html", results=result)
                 
 
 if __name__ == '__main__':

@@ -51,11 +51,7 @@ class House:
         self.right = right
         self.corner = corner
         self.pair = pair
-        if (House.connection is None):
-            try:
-                House.connection = getConnection()
-            except Exception as e:
-                print("Caught Error:",e)
+        
             
     ##Effects: Returns a tuple of house identifiers (neighborhood, block, lot)
     def getID(self):
@@ -88,43 +84,46 @@ class House:
     ##Effects: Returns a list of all colours this house can be,
     ##         If this house does not yet have a elevation, returns []
     ##         If this house does not have a vailid elevation, throws invalid elevation exception
-    def colours(self,tempElevation = None):
+    def colours(self,tempElevation = None, connection = None):
         id = self.getID()
+        if (connection is None):
+            connection = getConnection()
+
         if (tempElevation is not None):
             elevation = tempElevation
         else:
-            elevation = self.getElevation(id[0],id[1],id[2])
+            elevation = self.getElevation(id[0],id[1],id[2],connection)
         if (elevation == "PR" or elevation == "CR" or elevation == "CL"):
-            return self.getColorsForElevation(copy.deepcopy(self.elevationToColorDict[elevation]))
+            return self.getColorsForElevation(copy.deepcopy(self.elevationToColorDict[elevation]),connection)
         elif (elevation is None or elevation == " " or elevation == ""):
             return []
         else:
             raise InvalidElevationException(elevation)
-        
+    
     ## EFFECTS: returns a list of all the possible colors a house can be based on the list of possiblities
-    def getColorsForElevation(self,possibleColors):
+    def getColorsForElevation(self,possibleColors,connection):
         colors = []
         threads = []
 
         if (len(self.left) > 1 and self.left[1] is not None):
-            t = RetThread(target = self.getColor, args=(self.left[1][0],self.left[1][1],self.left[1][2]))
+            t = RetThread(target = self.getColor, args=(self.left[1][0],self.left[1][1],self.left[1][2],connection))
             t.start()
             threads.append(t)
         if (len(self.left) >= 1 and self.left[0] is not None):
-            t = RetThread(target = self.getColor, args=(self.left[0][0],self.left[0][1],self.left[0][2]))
+            t = RetThread(target = self.getColor, args=(self.left[0][0],self.left[0][1],self.left[0][2],connection))
             t.start()
             threads.append(t)
         if (len(self.right) >= 1 and self.right[0] is not None):
-            t = RetThread(target = self.getColor, args=(self.right[0][0],self.right[0][1],self.right[0][2]))
+            t = RetThread(target = self.getColor, args=(self.right[0][0],self.right[0][1],self.right[0][2],connection))
             t.start()
             threads.append(t)
         if (len(self.right) > 1 and self.right[1] is not None):
-            t = RetThread(target = self.getColor, args=(self.right[1][0],self.right[1][1],self.right[1][2]))
+            t = RetThread(target = self.getColor, args=(self.right[1][0],self.right[1][1],self.right[1][2],connection))
             t.start()
             threads.append(t)
 
         for cross in self.across:
-            t = RetThread(target = self.getColor, args=(cross[0],cross[1],cross[2]))
+            t = RetThread(target = self.getColor, args=(cross[0],cross[1],cross[2],connection))
             t.start()
             threads.append(t)
 
@@ -140,21 +139,24 @@ class House:
         return possibleColors
         
     ##Effects: Returns a list of all models this house can be, Throws InvalidFootageException if this house does not have valid Footage
-    def models(self,tempElevation = None):
+    def models(self,tempElevation = None, connection = None):
         id = self.getID()
-        footage = self.getFootage(id[0],id[1],id[2])
+        if (connection is None):
+            connection = getConnection()
+
+        footage = self.getFootage(id[0],id[1],id[2],connection)
         if (footage == '44 ft\'s' or footage ==  '36 ft\'s' or footage ==  '24 ft\'s'):
-            return self.modelsForSize(copy.deepcopy(self.footageToModels[footage]), tempElevation)
+            return self.modelsForSize(copy.deepcopy(self.footageToModels[footage]), tempElevation,connection)
         else:
             raise InvalidFootageException(footage)
 
     ##Effects: Returns all the models that this house can be by elimatating models from the possible starting models.    
-    def modelsForSize(self,possibleModels,tempElevation):
+    def modelsForSize(self,possibleModels,tempElevation,connection):
         id = self.getID()
         if (tempElevation is not None):
             elevation = tempElevation
         else:
-            elevation = self.getElevation(id[0],id[1],id[2])
+            elevation = self.getElevation(id[0],id[1],id[2],connection)
 
         if (elevation != None and elevation != " " and elevation != ""):
             ##This house does have en elevation
@@ -163,7 +165,7 @@ class House:
             elevationThreads = []
             toRemove = []
 
-            threeThread = RetThread(target = self.ModelsThreeInRow)
+            threeThread = RetThread(target = self.ModelsThreeInRow, args=(connection,))
             threeThread.start()
             
             
@@ -183,9 +185,9 @@ class House:
                 effectsMod.append(h)
 
             for h in effectsMod:
-                tm = RetThread(target = self.getModel, args=(h[0],h[1],h[2]))
+                tm = RetThread(target = self.getModel, args=(h[0],h[1],h[2],connection))
                 tm.start()
-                te = RetThread(target= self.getElevation, args=(h[0],h[1],h[2]))
+                te = RetThread(target= self.getElevation, args=(h[0],h[1],h[2],connection))
                 te.start()
                 modelThreads.append(tm)
                 elevationThreads.append(te)
@@ -197,8 +199,8 @@ class House:
                     toRemove.append(mod)
 
             ## 30% Rule
-            modelCounts = self.getBlockModelsForElevations(id[0],id[1],elevation)
-            blocksize = self.getBlockSize(id[0],id[1])
+            modelCounts = self.getBlockModelsForElevations(id[0],id[1],elevation,connection)
+            blocksize = self.getBlockSize(id[0],id[1],connection)
             cutoff = blocksize/3
 
             ##Possible need for delta when dividing
@@ -218,7 +220,7 @@ class House:
             return possibleModels
         
     ##Effects: Retuns a list of all the modles this house can not be via the 3 in row rule    
-    def ModelsThreeInRow(self):
+    def ModelsThreeInRow(self,connection):
         oneLeftModel = None
         twoLeftModel = None
         oneRightModel = None
@@ -232,22 +234,22 @@ class House:
 
         if (len(self.left) > 1 and self.left[1] is not None):
             oneLeftBool = 1
-            t = RetThread(target = self.getModel, args=(self.left[1][0],self.left[1][1],self.left[1][2]))
+            t = RetThread(target = self.getModel, args=(self.left[1][0],self.left[1][1],self.left[1][2],connection))
             t.start()
             threads[0] = t
         if (len(self.left) >= 1 and self.left[0] is not None):
             twoLeftBool = 1
-            t = RetThread(target = self.getModel, args=(self.left[0][0],self.left[0][1],self.left[0][2]))
+            t = RetThread(target = self.getModel, args=(self.left[0][0],self.left[0][1],self.left[0][2],connection))
             t.start()
             threads[1] = t 
         if (len(self.right) >= 1 and self.right[0] is not None):
             oneRightBool = 1
-            t = RetThread(target = self.getModel, args=(self.right[0][0],self.right[0][1],self.right[0][2]))
+            t = RetThread(target = self.getModel, args=(self.right[0][0],self.right[0][1],self.right[0][2],connection))
             t.start()
             threads[2] = t
         if (len(self.right) > 1 and self.right[1] is not None):
             twoRightBool = 1
-            t = RetThread(target = self.getModel, args=(self.right[1][0],self.right[1][1],self.right[1][2]))
+            t = RetThread(target = self.getModel, args=(self.right[1][0],self.right[1][1],self.right[1][2],connection))
             t.start()
             threads[3] = t
 
@@ -270,26 +272,29 @@ class House:
         return notModels
             
     ##Effects: Returns a list of all elevations this house can be
-    def elevations(house, tempModel = None):
+    def elevations(house, tempModel = None, connection = None):
         elevationList = ["CR","PR","CL"]
         lock = threading.Lock()
+
+        if (connection is None):
+            connection = getConnection()
 
         def checkCorner(tempModel = None):
             curHouse = house.getID()
 
-            # if (tempModel is not None):
-            #     houseModel = tempModel
-            # else:
-            #     houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
+            if (tempModel is not None):
+                houseModel = tempModel
+            else:
+                houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2],connection)
             
-            # if (houseModel is not None and houseModel != ""):
-            #     for cornerHouse in house.corner:
-            #         cornerHouseElevation = house.getElevation(cornerHouse[0], cornerHouse[1], cornerHouse[2])
-            #         cornerHouseModel = house.getModel(cornerHouse[0], cornerHouse[1], cornerHouse[2])
-            #         lock.acquire()
-            #         if (cornerHouseElevation is not None and cornerHouseElevation in elevationList and cornerHouseModel == houseModel):
-            #             elevationList.remove(cornerHouseElevation)
-            #         lock.release()
+            if (houseModel is not None and houseModel != ""):
+                for cornerHouse in house.corner:
+                    cornerHouseElevation = house.getElevation(cornerHouse[0], cornerHouse[1], cornerHouse[2],connection)
+                    cornerHouseModel = house.getModel(cornerHouse[0], cornerHouse[1], cornerHouse[2],connection)
+                    lock.acquire()
+                    if (cornerHouseElevation is not None and cornerHouseElevation in elevationList and cornerHouseModel == houseModel):
+                        elevationList.remove(cornerHouseElevation)
+                    lock.release()
 
                 
 
@@ -303,8 +308,8 @@ class House:
             else:
                 leftHouse = house.left[1]
                 if leftHouse is not None:
-                    leftHouseModel = house.getModel(leftHouse[0], leftHouse[1], leftHouse[2])
-                    leftHouseElevation = house.getElevation(leftHouse[0], leftHouse[1], leftHouse[2])
+                    leftHouseModel = house.getModel(leftHouse[0], leftHouse[1], leftHouse[2],connection)
+                    leftHouseElevation = house.getElevation(leftHouse[0], leftHouse[1], leftHouse[2],connection)
 
             # get characteristics of right house
             if len(house.right) == 0:
@@ -314,8 +319,8 @@ class House:
             else: 
                 rightHouse = house.right[0]
                 if rightHouse is not None:
-                    rightHouseModel = house.getModel(rightHouse[0], rightHouse[1], rightHouse[2])
-                    rightHouseElevation = house.getElevation(rightHouse[0], rightHouse[1], rightHouse[2])
+                    rightHouseModel = house.getModel(rightHouse[0], rightHouse[1], rightHouse[2],connection)
+                    rightHouseElevation = house.getElevation(rightHouse[0], rightHouse[1], rightHouse[2],connection)
 
             # get characteristics of current house
             curHouse = house.getID()
@@ -323,7 +328,7 @@ class House:
             if (tempModel is not None):
                 houseModel = tempModel
             else:
-                houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2])
+                houseModel = house.getModel(curHouse[0], curHouse[1], curHouse[2],connection)
 
             # if the model is the same, elevation must be alternating
             if houseModel is not None:
@@ -344,7 +349,7 @@ class House:
             # check across houses: directly across, left one of direct, right one of direct
             threads = []
             for cross in house.across:
-                t = RetThread(target=house.getElevation, args = (cross[0], cross[1], cross[2]))
+                t = RetThread(target=house.getElevation, args = (cross[0], cross[1], cross[2],connection))
                 t.start()
                 threads.append(t)
 
@@ -362,8 +367,8 @@ class House:
             if (tempModel is not None):
                 houseModel = tempModel
             else:
-                houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
-            houseBlock = selectBlock(house.neighborhood,house.block,House.connection)
+                houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2],connection)
+            houseBlock = selectBlock(house.neighborhood,house.block,connection)
             # loops through houses on the block
             for neighbour in houseBlock:
                 print("neighborr:", neighbour)
@@ -390,22 +395,22 @@ class House:
             if (tempModel is not None):
                 houseModel = tempModel
             else:
-                houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2])
-            houseElevation = house.getElevation(houseArray[0], houseArray[1], houseArray[2])
+                houseModel = house.getModel(houseArray[0], houseArray[1], houseArray[2],connection)
+            houseElevation = house.getElevation(houseArray[0], houseArray[1], houseArray[2],connection)
 
             # loop through left Neighbours
             for leftNeighbour in house.left:
                 if leftNeighbour is not None:
-                    elevation = house.getElevation(leftNeighbour[0], leftNeighbour[1], leftNeighbour[2])
-                    model = house.getModel(leftNeighbour[0], leftNeighbour[1], leftNeighbour[2])
+                    elevation = house.getElevation(leftNeighbour[0], leftNeighbour[1], leftNeighbour[2],connection)
+                    model = house.getModel(leftNeighbour[0], leftNeighbour[1], leftNeighbour[2],connection)
                     if model == houseModel:
                         possibleElevations[elevation] += 1
 
             # loop through right Neighbours
             for rightNeighbour in house.right:
                 if rightNeighbour is not None:
-                    elevation = house.getElevation(rightNeighbour[0], rightNeighbour[1], rightNeighbour[2])
-                    model = house.getModel(rightNeighbour[0], rightNeighbour[1], rightNeighbour[2])
+                    elevation = house.getElevation(rightNeighbour[0], rightNeighbour[1], rightNeighbour[2],connection)
+                    model = house.getModel(rightNeighbour[0], rightNeighbour[1], rightNeighbour[2],connection)
                     if model == houseModel:
                         possibleElevations[elevation] += 1
 
@@ -461,8 +466,8 @@ class House:
     ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
-    def getColor(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot,House.connection)
+    def getColor(self,neighborhood,block,lot,connection):
+        result = selectSingle(neighborhood,block,lot,connection)
         if (len(result) == 0):
             return ""
         else:
@@ -475,8 +480,8 @@ class House:
   
     ##Effects: Queries the database and returns the model of the house with the provided identifier
     ##         If the house does not exist returns ""
-    def getModel(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot,House.connection)
+    def getModel(self,neighborhood,block,lot,connection):
+        result = selectSingle(neighborhood,block,lot,connection)
         if (len(result) == 0):
             return ""
         else:
@@ -489,16 +494,16 @@ class House:
  
     ##Effects: Queries the database and returns the elevation of the house with the provided identifier
     ##         If the house does not exist returns ""
-    def getElevation(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot,House.connection)
+    def getElevation(self,neighborhood,block,lot,connection):
+        result = selectSingle(neighborhood,block,lot,connection)
         if (len(result) == 0):
             return ""
         else:
             return result[0]['elevation']
     
     ##Effects: Returns the footage value fo the given house
-    def getFootage(self,neighborhood,block,lot):
-        result = selectSingle(neighborhood,block,lot, House.connection)
+    def getFootage(self,neighborhood,block,lot,connection):
+        result = selectSingle(neighborhood,block,lot, connection)
         if (len(result) == 0):
             return ""
         else:
@@ -506,12 +511,12 @@ class House:
         
     ##Effects: Returns an array of all the models and elevation pairs for houses on
     ##         the given neighborhood and block
-    def getBlockModelsForElevations(self,neighborhood,block,elevation):
-        return modelCountsBlockElevation(neighborhood,block,elevation,House.connection)
+    def getBlockModelsForElevations(self,neighborhood,block,elevation,connection):
+        return modelCountsBlockElevation(neighborhood,block,elevation,connection)
     
     ##Effects: Returns the nubmer of houses on the block
-    def getBlockSize(self,neighborhood,block):
-        return blockSize(neighborhood,block,House.connection)[0][0]
+    def getBlockSize(self,neighborhood,block,connection):
+        return blockSize(neighborhood,block,connection)[0][0]
 
     def toDict(self):
         return {
@@ -529,7 +534,8 @@ class House:
         return cls(data['neighborhood'],data['block'],data['lot'],data['across'],data['left'],data['right'],data['corner'],data['pair'])
     
     ##Effects: Returns true if this house can be the given model elevation and colour
-    def canBeSpecifics(self,model,elevation,colour):
+    def canBeSpecifics(self,neighborhood, block, lot, model,elevation,colour):
+        conn = getConnection()
         if (model == ""):
             Newmodel = None
         else:
@@ -540,11 +546,16 @@ class House:
             Newelevation = elevation
 
         print(Newmodel, "The new model in can Be Specifics")
-        possibleModels = self.models(tempElevation=Newelevation)
-        possibleElevations = self.elevations(tempModel=Newmodel)
-        possibleColours = self.colours(tempElevation=Newelevation)
+        possibleModels = self.models(tempElevation=Newelevation,connection = conn)
+        possibleElevations = self.elevations(tempModel=Newmodel,connection = conn)
+        possibleColours = self.colours(tempElevation=Newelevation,connection = conn)
 
-        return ((model in possibleModels or model == "") and (elevation in possibleElevations or elevation == "") and (colour in possibleColours or colour == ""))
+        if ((model in possibleModels or model == "") and (elevation in possibleElevations or elevation == "") and (colour in possibleColours or colour == "")):
+            return {'neighborhood': neighborhood,
+                    'block': block,
+                    'lot': lot}
+        else:
+            return None
 
 
 
