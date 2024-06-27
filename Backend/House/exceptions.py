@@ -20,3 +20,10 @@ class InvalidFootageException(Exception):
 
     def __str__(self):
         return self.message
+    
+class InvalidHouseException(Exception):
+    def __init__(self, neighborhood = "", block = "", lot = ""):
+        self.message = "Invalid House, Neighborhood: " + str(neighborhood) + " Block: " + str(block) + " Lot: " + str(lot)
+
+    def __str__(self):
+        return self.message

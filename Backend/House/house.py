@@ -270,6 +270,8 @@ class House:
     def elevations(house, tempModel = None, connection = None):
         elevationList = ["CR","PR","CL"]
         lock = threading.Lock()
+        houseId = house.getID()
+        house.getHouse(houseId[0],houseId[1],houseId[2],connection)
 
         if (connection is None):
             connection = getConnection()
@@ -448,19 +450,21 @@ class House:
 
         return elevationList
 
-
-
-        
+    ##Effects: Returns the house from the database
+    ##         If the house does not exists, throws InvalidHouseException
+    def getHouse(self,neighborhood,block,lot,connection):
+        result = selectSingle(neighborhood,block,lot,connection)
+        if (result == []):
+            raise InvalidHouseException(neighborhood,block,lot)
+        else:
+            return result
 
     ##Effects: Queries the database and retruns the color of the house with 
             ##Provided neighborhood, block, lot numbers
             ##If the house does not exist, returns ""
     def getColor(self,neighborhood,block,lot,connection):
-        result = selectSingle(neighborhood,block,lot,connection)
-        if (len(result) == 0):
-            return ""
-        else:
-            return result[0]['extcolour']
+        result = self.getHouse(neighborhood,block,lot,connection)
+        return result[0]['extcolour']
         
         
      ##Effects: Queries the database and retruns the color of the house with 
@@ -470,11 +474,8 @@ class House:
     ##Effects: Queries the database and returns the model of the house with the provided identifier
     ##         If the house does not exist returns ""
     def getModel(self,neighborhood,block,lot,connection):
-        result = selectSingle(neighborhood,block,lot,connection)
-        if (len(result) == 0):
-            return ""
-        else:
-            return result[0]['model']
+        result = self.getHouse(neighborhood,block,lot,connection)
+        return result[0]['model']
 
 
      ##Effects: Queries the database and retruns the color of the house with 
@@ -484,19 +485,13 @@ class House:
     ##Effects: Queries the database and returns the elevation of the house with the provided identifier
     ##         If the house does not exist returns ""
     def getElevation(self,neighborhood,block,lot,connection):
-        result = selectSingle(neighborhood,block,lot,connection)
-        if (len(result) == 0):
-            return ""
-        else:
-            return result[0]['elevation']
+        result = self.getHouse(neighborhood,block,lot,connection)
+        return result[0]['elevation']
     
     ##Effects: Returns the footage value fo the given house
     def getFootage(self,neighborhood,block,lot,connection):
-        result = selectSingle(neighborhood,block,lot, connection)
-        if (len(result) == 0):
-            return ""
-        else:
-            return result[0]['footage']
+        result = self.getHouse(neighborhood,block,lot,connection)
+        return result[0]['footage']
         
     ##Effects: Returns an array of all the models and elevation pairs for houses on
     ##         the given neighborhood and block
