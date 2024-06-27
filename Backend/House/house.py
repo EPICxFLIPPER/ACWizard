@@ -12,6 +12,7 @@ from Queries.read import selectBlock
 from Connection.connection import getConnection
 from Threads.retThread import RetThread
 import json
+import time
 ## A House object with realtional information to the the houses around it, and methods to handle arcitectrual controls
 class House:
 
@@ -159,8 +160,8 @@ class House:
             elevation = self.getElevation(id[0],id[1],id[2],connection)
 
         if (elevation != None and elevation != " " and elevation != ""):
-            ##This house does have en elevation
             
+        
             modelThreads = []
             elevationThreads = []
             toRemove = []
@@ -221,52 +222,46 @@ class House:
         
     ##Effects: Retuns a list of all the modles this house can not be via the 3 in row rule    
     def ModelsThreeInRow(self,connection):
+     
+        id = self.getID()
+        thisElevation = self.getElevation(id[0],id[1],id[2],connection)
         oneLeftModel = None
         twoLeftModel = None
         oneRightModel = None
         twoRightModel = None
+        oneLeftElevation = None
+        oneRightElevation = None
+        twoLeftElevation = None
+        twoRightElevation = None
         oneLeftBool = 0
         twoLeftBool = 0
         oneRightBool = 0
         twoRightBool = 0
-        threads = [None,None,None,None]
         notModels = []
 
         if (len(self.left) > 1 and self.left[1] is not None):
             oneLeftBool = 1
-            t = RetThread(target = self.getModel, args=(self.left[1][0],self.left[1][1],self.left[1][2],connection))
-            t.start()
-            threads[0] = t
+            oneLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2],connection)
+            oneLeftElevation = self.getElevation(self.left[1][0],self.left[1][1],self.left[1][2],connection)
         if (len(self.left) >= 1 and self.left[0] is not None):
             twoLeftBool = 1
-            t = RetThread(target = self.getModel, args=(self.left[0][0],self.left[0][1],self.left[0][2],connection))
-            t.start()
-            threads[1] = t 
+            twoLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2],connection)
+            twoLeftElevation = self.getElevation(self.left[0][0],self.left[0][1],self.left[0][2],connection)
         if (len(self.right) >= 1 and self.right[0] is not None):
             oneRightBool = 1
-            t = RetThread(target = self.getModel, args=(self.right[0][0],self.right[0][1],self.right[0][2],connection))
-            t.start()
-            threads[2] = t
+            oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2],connection)
+            oneRightElevation = self.getElevation(self.right[0][0],self.right[0][1],self.right[0][2],connection)
         if (len(self.right) > 1 and self.right[1] is not None):
             twoRightBool = 1
-            t = RetThread(target = self.getModel, args=(self.right[1][0],self.right[1][1],self.right[1][2],connection))
-            t.start()
-            threads[3] = t
+            twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2],connection)
+            twoRightElevation = self.getElevation(self.right[1][0],self.right[1][1],self.right[1][2],connection)
 
-        if (oneLeftBool):
-            oneLeftModel = threads[0].join()
-        if (twoLeftBool):
-            oneRightModel = threads[1].join()
-        if (oneRightBool):
-            oneRightModel = threads[2].join()
-        if (twoRightBool):
-            oneRightModel = threads[3].join()
-        
-        if (oneLeftModel == twoLeftModel and (oneLeftModel is not None) and (twoLeftModel is not None)):
+
+        if (oneLeftModel == twoLeftModel and (oneLeftModel is not None) and (twoLeftModel is not None) and (oneLeftElevation == thisElevation and (oneLeftElevation is not None or oneLeftElevation == "")) ):
             notModels.append(oneLeftModel)
-        if (oneLeftModel == oneRightModel and (oneLeftModel is not None) and (oneRightModel is not None)):
+        if (oneLeftModel == oneRightModel and (oneLeftModel is not None) and (oneRightModel is not None) and ((oneLeftElevation == thisElevation and (oneLeftElevation is not None or oneLeftElevation == "")) or (oneRightElevation == thisElevation and (oneRightElevation is not None or oneRightElevation == "")))):
             notModels.append(oneLeftModel)
-        if (oneRightModel == twoRightModel and (oneRightModel is not None) and (twoRightModel is not None)):
+        if (oneRightModel == twoRightModel and (oneRightModel is not None) and (twoRightModel is not None) and (oneRightElevation == thisElevation and (oneRightElevation is not None or oneRightElevation == ""))):
             notModels.append(twoRightModel)
 
         return notModels
@@ -527,8 +522,11 @@ class House:
     def fromDict(cls,data):
         return cls(data['neighborhood'],data['block'],data['lot'],data['across'],data['left'],data['right'],data['corner'],data['pair'])
     
+
+    ##TODO reduce time, right now models takes the longest, followed by elevation, colour is insignificant 
     ##Effects: Returns true if this house can be the given model elevation and colour
     def canBeSpecifics(self,neighborhood, block, lot, model,elevation,colour):
+        start = time.time()
         conn = getConnection()
         if (model == ""):
             Newmodel = None
@@ -540,14 +538,24 @@ class House:
             Newelevation = elevation
 
         possibleModels = self.models(tempElevation=Newelevation,connection = conn)
+        throughModels = time.time()
         possibleElevations = self.elevations(tempModel=Newmodel,connection = conn)
+        throughElevations = time.time()
         possibleColours = self.colours(tempElevation=Newelevation,connection = conn)
+        throughColours = time.time()
+
 
         if ((model in possibleModels or model == "") and (elevation in possibleElevations or elevation == "") and (colour in possibleColours or colour == "")):
+            end = time.time()
+            print("Modles: ", throughModels - start, "Elevations: ", throughElevations - throughModels, "Colours: ", throughColours - throughElevations, "end: ", end - start)
             return {'neighborhood': neighborhood,
                     'block': block,
                     'lot': lot}
+
         else:
+            end = time.time()
+            print("Modles: ", throughModels - start, "Elevations: ", throughElevations - throughModels, "Colours: ", throughColours - throughElevations, "end: ", end - start)
+
             return None
 
 

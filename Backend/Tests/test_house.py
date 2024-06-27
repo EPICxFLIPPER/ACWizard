@@ -5,6 +5,7 @@ import pytest
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
 from House.house import *
+from Queries.read import selectSingle
 
 n = "Ryan"
 
@@ -206,11 +207,21 @@ def test_ColourTwoApartLeftAlmostEndOfRow():
 def test_ModelMaxThreeHasThree():
     left = [(n,30,1),(n,30,2)]
     right = [(n,30,3),None]
+    print(selectSingle(n,30,1))
+    print(selectSingle(n,30,2))
+    print(selectSingle(n,30,3))
+    print(selectSingle(n,2,7))
     opp = House(n,2,7,[],left,right,[],[])
-    assert opp.models() == ['Cypress','Fairview','Monarch','Whistler','Yamnuska','Norquay']
+    assert opp.models() == ['Cypress','Fairview',"Fullerton",'Monarch','Whistler','Yamnuska','Norquay']
 
 # Tests the case where unique models can only be 3 in a row with alternating elevations two left two right
 def test_ModelMaxThreeDoesNotHaveThree():
+    print(selectSingle(n,30,1))
+    print(selectSingle(n,30,2))
+    print(selectSingle(n,3,10))
+    print(selectSingle(n,3,11))
+    print(selectSingle(n,2,7))
+
     left = [(n,30,1),(n,30,2)]
     right = [(n,3,10),(n,3,11)]
     opp = House(n,2,7,[],left,right,[],[])
