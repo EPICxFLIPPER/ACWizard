@@ -32,7 +32,7 @@ def test_Elevation3AcrossAll():
 ##All 3 houses across have no set elevation
 def test_Elevation3AcrossEmpty():
     cross = [(n,4,13),(n,4,14),(n,4,15)]
-    opp = House(n,1,16,cross,[],[],[],[])
+    opp = House(n,1,1,cross,[],[],[],[])
     assert sorted(opp.elevations()) == sorted(["CR","PR","CL"])
 
 ##Only two of the across houses have set elevations

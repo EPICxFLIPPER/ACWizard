@@ -231,30 +231,18 @@ class House:
         twoRightModel = None
         oneLeftElevation = None
         oneRightElevation = None
-        twoLeftElevation = None
-        twoRightElevation = None
-        oneLeftBool = 0
-        twoLeftBool = 0
-        oneRightBool = 0
-        twoRightBool = 0
         notModels = []
 
         if (len(self.left) > 1 and self.left[1] is not None):
-            oneLeftBool = 1
             oneLeftModel = self.getModel(self.left[1][0],self.left[1][1],self.left[1][2],connection)
             oneLeftElevation = self.getElevation(self.left[1][0],self.left[1][1],self.left[1][2],connection)
         if (len(self.left) >= 1 and self.left[0] is not None):
-            twoLeftBool = 1
             twoLeftModel = self.getModel(self.left[0][0],self.left[0][1],self.left[0][2],connection)
-            twoLeftElevation = self.getElevation(self.left[0][0],self.left[0][1],self.left[0][2],connection)
         if (len(self.right) >= 1 and self.right[0] is not None):
-            oneRightBool = 1
             oneRightModel = self.getModel(self.right[0][0],self.right[0][1],self.right[0][2],connection)
             oneRightElevation = self.getElevation(self.right[0][0],self.right[0][1],self.right[0][2],connection)
         if (len(self.right) > 1 and self.right[1] is not None):
-            twoRightBool = 1
             twoRightModel = self.getModel(self.right[1][0],self.right[1][1],self.right[1][2],connection)
-            twoRightElevation = self.getElevation(self.right[1][0],self.right[1][1],self.right[1][2],connection)
 
 
         if (oneLeftModel == twoLeftModel and (oneLeftModel is not None) and (twoLeftModel is not None) and (oneLeftElevation == thisElevation and (oneLeftElevation is not None or oneLeftElevation == "")) ):
