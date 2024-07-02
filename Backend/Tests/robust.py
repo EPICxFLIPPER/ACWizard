@@ -44,3 +44,27 @@ def test_coloursHouseDoesntExist():
     except Exception as e:
         print(e)
         pytest.fail("Test Failed: Did not catch the correct exception")
+
+##Tests that invalidElevationException is thrown with house with no elevation
+def test_coloursHouseHasNoElevation():
+    try:
+        testHouse = House("Test",2,2,[],[],[],[],[]) ##has None elevation
+        testHouse.colours()
+        pytest.fail("Test Failed: InvalidElevationExcetion expected")
+    except InvalidElevationException:
+        assert True
+    except Exception as e:
+        print(e)
+        pytest.fail("Test Failed: Did nt catch the correct exception")
+
+##Tests that invalidElevationException is thrown with house with invalid elevation
+def test_coloursHouseHasNotValidElevation():
+    try:
+        testHouse = House("Weird",1,1,[],[],[],[],[]) ##has None elevation
+        testHouse.colours()
+        pytest.fail("Test Failed: InvalidElevationExcetion expected")
+    except InvalidElevationException:
+        assert True
+    except Exception as e:
+        print(e)
+        pytest.fail("Test Failed: Did nt catch the correct exception")

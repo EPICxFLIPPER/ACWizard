@@ -54,3 +54,6 @@ def selectBlock(neighborhood,block,connection = None):
         print("Error:", e)
     finally:
         cursor.close()
+
+print(selectSingle("Weird",1,1))
+print(selectAll())

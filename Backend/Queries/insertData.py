@@ -38,3 +38,5 @@ def insertData(fileLocaiton):
         # Close the cursor and connection
         cursor.close()
         connection.close()
+
+insertData("../Data/weird.csv")

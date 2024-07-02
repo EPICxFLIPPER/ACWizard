@@ -83,7 +83,7 @@ class House:
         self.corner.append(house)
 
     ##Effects: Returns a list of all colours this house can be,
-    ##         If this house does not yet have a elevation, returns []
+    ##         If this house does not yet have a elevation, or the elevation is not an acceptable one raise invalidElevationException
     ##         If this house does not have a vailid elevation, throws invalid elevation exception
     def colours(self,tempElevation = None, connection = None):
         id = self.getID()
@@ -94,10 +94,9 @@ class House:
             elevation = tempElevation
         else:
             elevation = self.getElevation(id[0],id[1],id[2],connection)
+
         if (elevation == "PR" or elevation == "CR" or elevation == "CL"):
             return self.getColorsForElevation(copy.deepcopy(self.elevationToColorDict[elevation]),connection)
-        elif (elevation is None or elevation == " " or elevation == ""):
-            return []
         else:
             raise InvalidElevationException(elevation)
     
